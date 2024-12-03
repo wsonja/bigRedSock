@@ -13,6 +13,7 @@ class HomeVC: UIViewController {
     // MARK: - Properties (view)
     private var postCollectionView: UICollectionView!
     private var createPostCollectionView: UICollectionView!
+    private let refreshControl = UIRefreshControl()
     
     // MARK: - Properties (data)
     private var posts = Post.dummyData
@@ -21,16 +22,50 @@ class HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Home"
+        title = "redretriever"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = UIColor.white
         
+        
+        setupCreatePostCollectionView()
         setupPostCollectionView()
-        // setupCreatePostCollectionView()
     }
     
     // MARK: - Set Up Views
+    private func setupCreatePostCollectionView() {
+        print("setupcreatepostcollectionview")
+        let padding = 20
+        let layout = UICollectionViewFlowLayout()
+        
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        
+        // Initialize CollectionView with the layout
+        createPostCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        createPostCollectionView.register(CreatePostCollectionViewCell.self, forCellWithReuseIdentifier: CreatePostCollectionViewCell.reuse)
+        createPostCollectionView.delegate = self
+        createPostCollectionView.dataSource = self
+        
+        // createPostCollectionView.backgroundColor = .red
+        
+        // createPostCollectionView.alwaysBounceVertical = true
+        
+        view.addSubview(createPostCollectionView)
+        
+        //postCollectionView.refreshControl = refreshControl
+        createPostCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            createPostCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CGFloat(padding)),
+            createPostCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: CGFloat(-padding)),
+            createPostCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: CGFloat(padding)),
+            createPostCollectionView.heightAnchor.constraint(equalToConstant: 120)
+        ])
+    }
+    
     private func setupPostCollectionView() {
+        print("setupPostCollectionView")
         let padding = 20
         let layout = UICollectionViewFlowLayout()
         
@@ -57,39 +92,8 @@ class HomeVC: UIViewController {
         NSLayoutConstraint.activate([
             postCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             postCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            postCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 300)
-        ])
-    }
-    
-    private func setupCreatePostCollectionView() {
-        let padding = 20
-        let layout = UICollectionViewFlowLayout()
-        
-        // layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        
-        // Initialize CollectionView with the layout
-        createPostCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        createPostCollectionView.register(CreatePostCollectionViewCell.self, forCellWithReuseIdentifier: CreatePostCollectionViewCell.reuse)
-        createPostCollectionView.delegate = self
-        createPostCollectionView.dataSource = self
-        
-//        collectionView.backgroundColor = .red
-        
-        createPostCollectionView.alwaysBounceVertical = true
-        
-        view.addSubview(createPostCollectionView)
-        
-        //postCollectionView.refreshControl = refreshControl
-        createPostCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            createPostCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
-            createPostCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            createPostCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: CGFloat(padding)),
-//            createPostCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+            postCollectionView.topAnchor.constraint(equalTo: createPostCollectionView.bottomAnchor, constant: 10),
+            postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
 }
@@ -101,6 +105,7 @@ extension HomeVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.createPostCollectionView {
+            print("returning 1")
             return 1
         }
         return posts.count
@@ -108,12 +113,13 @@ extension HomeVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.createPostCollectionView{
+    
+        if collectionView == self.createPostCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-            return cell 
+            return cell
         }
+        // CODE FOR PostCollectionViewCell
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
-
         cell.configure(post: self.posts[indexPath.row])
         return cell
         
@@ -132,6 +138,7 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
             let heightSize = collectionView.frame.height
             return CGSize(width: widthSize, height: heightSize)
         }
+        
         let size = collectionView.frame.width / 2 - 14
         return CGSize(width: size, height: size)
     }

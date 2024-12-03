@@ -10,10 +10,12 @@ import UIKit
 class CreatePostCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties (view)
-    private let postButton = UIButton()
+    private let postFindButton = UIButton()
+    private let postFoundButton = UIButton()
+    private let titleLabel = UILabel()
     
     // MARK: - Properties (data)
-    static let reuse: String = "CreatePostCollectionViewCellReuse"
+    static let reuse: String = "CreatePostCollectionViewCellReuseIdentifier"
     
     // MARK: - init
     override init(frame: CGRect) {
@@ -22,7 +24,9 @@ class CreatePostCollectionViewCell: UICollectionViewCell {
         backgroundColor = UIColor.a4.offWhite
         layer.cornerRadius = 16
         
-        setupPostButton()
+        setupTitleLabel()
+        setupPostFindButton()
+        // setupPostFoundButton()
     }
     
     required init?(coder: NSCoder) {
@@ -30,27 +34,56 @@ class CreatePostCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Set Up Views
-    private func setupPostButton() {
-            postButton.backgroundColor = UIColor.a4.ruby
-            postButton.layer.cornerRadius = 4
-            postButton.setTitle("Create Post", for: .normal)
-            postButton.setTitleColor(UIColor.a4.white, for: .normal)
-            postButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+    private func setupTitleLabel() {
+        titleLabel.text = "Lost an Item?"
+            titleLabel.textColor = UIColor.a4.black
+            titleLabel.font = .systemFont(ofSize: 20, weight: .medium)
+
+            contentView.addSubview(titleLabel)
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+                titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 25),
+            ])
+        }
+    
+    private func setupPostFindButton() {
+            postFindButton.backgroundColor = UIColor.a4.ruby
+            postFindButton.layer.cornerRadius = 4
+            postFindButton.setTitle("Submit a Lost Ticket ->", for: .normal)
+            postFindButton.setTitleColor(UIColor.a4.white, for: .normal)
+            postFindButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
             // postButton.addTarget(self, action: #selector(createPost), for: .touchUpInside)
             
-            contentView.addSubview(postButton)
-            postButton.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(postFindButton)
+            postFindButton.translatesAutoresizingMaskIntoConstraints = false
             
-            let sidePadding: CGFloat = 24
+            // let sidePadding: CGFloat = 10
             NSLayoutConstraint.activate([
-//                postButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
-//                postButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -sidePadding),
-                postButton.widthAnchor.constraint(equalToConstant: 96),
-                postButton.heightAnchor.constraint(equalToConstant: 32),
-                // postButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32)
-                postButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), 
-                postButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-                
+                postFindButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 70),
+                postFindButton.leftAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: 0),
+                postFindButton.widthAnchor.constraint(equalToConstant: 175),
+                postFindButton.heightAnchor.constraint(equalToConstant: 32),
+            ])
+        }
+    
+    private func setupPostFoundButton() {
+            postFoundButton.backgroundColor = UIColor.a4.ruby
+            postFoundButton.layer.cornerRadius = 4
+            postFoundButton.setTitle("Submit a Found Item ->", for: .normal)
+            postFoundButton.setTitleColor(UIColor.a4.white, for: .normal)
+            postFoundButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+            // postButton.addTarget(self, action: #selector(createPost), for: .touchUpInside)
+            
+            contentView.addSubview(postFoundButton)
+            postFoundButton.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                postFoundButton.topAnchor.constraint(equalTo: postFindButton.bottomAnchor, constant: 5),
+                postFoundButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
+                postFoundButton.widthAnchor.constraint(equalToConstant: 175),
+                postFoundButton.heightAnchor.constraint(equalToConstant: 32),
             ])
         }
     
