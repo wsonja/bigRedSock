@@ -22,6 +22,7 @@
 		64557B2D2CFD4EBE005D332E /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64557B2C2CFD4EBE005D332E /* LoginVC.swift */; };
 		64557B2F2CFD4ED4005D332E /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64557B2E2CFD4ED4005D332E /* Post.swift */; };
 		64557B312CFD4EEC005D332E /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64557B302CFD4EEC005D332E /* PostCollectionViewCell.swift */; };
+		645E64702CFECAD400F4A16F /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645E646F2CFECAD400F4A16F /* PostVC.swift */; };
 		6468360A2CFD6CA800085C07 /* CreatePostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646836092CFD6CA800085C07 /* CreatePostCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		64557B2C2CFD4EBE005D332E /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		64557B2E2CFD4ED4005D332E /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		64557B302CFD4EEC005D332E /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
+		645E646F2CFECAD400F4A16F /* PostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVC.swift; sourceTree = "<group>"; };
 		646836092CFD6CA800085C07 /* CreatePostCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,6 +104,7 @@
 			children = (
 				64557B2A2CFD4EB1005D332E /* HomeVC.swift */,
 				64557B2C2CFD4EBE005D332E /* LoginVC.swift */,
+				645E646F2CFECAD400F4A16F /* PostVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				2ED7005A2AF1CF5600B7C687 /* SceneDelegate.swift in Sources */,
 				2E07F6172AF1D06A00395214 /* UIColor+Extension.swift in Sources */,
 				64557B312CFD4EEC005D332E /* PostCollectionViewCell.swift in Sources */,
+				645E64702CFECAD400F4A16F /* PostVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

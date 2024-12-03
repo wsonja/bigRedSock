@@ -24,7 +24,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -32,7 +32,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -40,7 +40,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -48,7 +48,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -56,7 +56,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -64,7 +64,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -72,7 +72,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -80,7 +80,7 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "11/26/2024"
         )
     ]
 }

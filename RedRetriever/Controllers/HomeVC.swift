@@ -143,6 +143,12 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
         return CGSize(width: size, height: size)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == self.postCollectionView {
+            let viewItemVC = ItemVC()
+            viewItemVC.configure(post: self.posts[indexPath.row])
+            navigationController?.pushViewController(viewItemVC, animated: true)
+            collectionView.reloadData()
+        }
+    }
 }
