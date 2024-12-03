@@ -20,14 +20,13 @@ class HomeVC: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
         title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = UIColor.white
         
         setupPostCollectionView()
-        setupCreatePostCollectionView()
+        // setupCreatePostCollectionView()
     }
     
     // MARK: - Set Up Views
@@ -81,7 +80,7 @@ class HomeVC: UIViewController {
         
         createPostCollectionView.alwaysBounceVertical = true
         
-        view.addSubview(postCollectionView)
+        view.addSubview(createPostCollectionView)
         
         //postCollectionView.refreshControl = refreshControl
         createPostCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,8 +88,8 @@ class HomeVC: UIViewController {
         NSLayoutConstraint.activate([
             createPostCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             createPostCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            createPostCollectionView.topAnchor.constraint(equalTo: postCollectionView.bottomAnchor, constant: CGFloat(padding)),
-            createPostCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+            createPostCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: CGFloat(padding)),
+//            createPostCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
 }
@@ -105,6 +104,7 @@ extension HomeVC: UICollectionViewDataSource {
             return 1
         }
         return posts.count
+        // return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -113,9 +113,12 @@ extension HomeVC: UICollectionViewDataSource {
             return cell 
         }
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
-        
+
         cell.configure(post: self.posts[indexPath.row])
         return cell
+        
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
+//        return cell
         }
     }
 
@@ -124,6 +127,11 @@ extension HomeVC: UICollectionViewDataSource {
 extension HomeVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == self.createPostCollectionView {
+            let widthSize = collectionView.frame.width
+            let heightSize = collectionView.frame.height
+            return CGSize(width: widthSize, height: heightSize)
+        }
         let size = collectionView.frame.width / 2 - 14
         return CGSize(width: size, height: size)
     }

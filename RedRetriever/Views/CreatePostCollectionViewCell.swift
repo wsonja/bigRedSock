@@ -33,7 +33,7 @@ class CreatePostCollectionViewCell: UICollectionViewCell {
     private func setupPostButton() {
             postButton.backgroundColor = UIColor.a4.ruby
             postButton.layer.cornerRadius = 4
-            postButton.setTitle("Post", for: .normal)
+            postButton.setTitle("Create Post", for: .normal)
             postButton.setTitleColor(UIColor.a4.white, for: .normal)
             postButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
             // postButton.addTarget(self, action: #selector(createPost), for: .touchUpInside)
@@ -43,11 +43,14 @@ class CreatePostCollectionViewCell: UICollectionViewCell {
             
             let sidePadding: CGFloat = 24
             NSLayoutConstraint.activate([
-                postButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
-                postButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -sidePadding),
+//                postButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
+//                postButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -sidePadding),
                 postButton.widthAnchor.constraint(equalToConstant: 96),
                 postButton.heightAnchor.constraint(equalToConstant: 32),
-                postButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32)
+                // postButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32)
+                postButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), 
+                postButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+                
             ])
         }
     
