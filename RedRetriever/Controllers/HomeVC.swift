@@ -8,11 +8,19 @@
 import Foundation
 import UIKit
 
-class HomeVC: UIViewController {
+class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
+    func didUpdateProfile(with num: Int) {
+        itemNumLabel.text = "No. of items: " + String(num)
+    }
+    
 
     // MARK: - Properties (view)
     private var postCollectionView: UICollectionView!
     private var createPostCollectionView: UICollectionView!
+    private let createRequestButton = UIButton()
+    private let foundButton = UIButton()
+    private let requestsButton = UIButton()
+    private let itemNumLabel = UILabel()
     
     // MARK: - Properties (data)
     private var posts = Post.dummyData
@@ -26,6 +34,9 @@ class HomeVC: UIViewController {
         view.backgroundColor = UIColor.white
         
         setupPostCollectionView()
+        setupcreateRequestButton()
+        setupfoundButton()
+        setupRequestsButton()
         // setupCreatePostCollectionView()
     }
     
@@ -92,6 +103,85 @@ class HomeVC: UIViewController {
 //            createPostCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
+    
+    private func setupRequestsButton() {
+        requestsButton.setTitle("Your Requests", for: .normal)
+        requestsButton.setTitleColor(UIColor.white, for: .normal)
+        requestsButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        requestsButton.layer.cornerRadius = 16
+
+        view.addSubview(requestsButton)
+        requestsButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            requestsButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -252),
+            requestsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            requestsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            requestsButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        requestsButton.addTarget(self, action: #selector(requestsTapped), for: .touchUpInside)
+    }
+    
+    @objc func requestsTapped() {
+        let RequestsVC = RequestsVC()
+        navigationController?.pushViewController(RequestsVC, animated: true)
+    }
+    
+    
+    
+    private func setupcreateRequestButton() {
+        createRequestButton.setTitle("Create Request", for: .normal)
+        createRequestButton.setTitleColor(UIColor.white, for: .normal)
+        createRequestButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        createRequestButton.layer.cornerRadius = 16
+
+        view.addSubview(createRequestButton)
+        createRequestButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            createRequestButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -152),
+            createRequestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            createRequestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            createRequestButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
+    }
+    
+    
+    @objc func createRequestTapped() {
+        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: 12, date: Date(), location: "String", desc: "String")
+        CreateRequestVC.delegate = self
+        navigationController?.pushViewController(CreateRequestVC, animated: true)
+    }
+    
+    
+    private func setupfoundButton() {
+        foundButton.setTitle("Found Item", for: .normal)
+        foundButton.setTitleColor(UIColor.white, for: .normal)
+        foundButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        foundButton.layer.cornerRadius = 16
+
+        view.addSubview(foundButton)
+        foundButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            foundButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64),
+            foundButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            foundButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            foundButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        foundButton.addTarget(self, action: #selector(foundTapped), for: .touchUpInside)
+    }
+    
+    @objc func foundTapped() {
+        let FoundVC = FoundVC(name: "String", date: Date(), location: "String", desc: "String")
+        FoundVC.delegate = self
+        navigationController?.pushViewController(FoundVC, animated: true)
+    }
+  
 }
 
 // MARK: - UICollectionView DataSource
@@ -138,4 +228,12 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
     
 //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //    }
+}
+
+protocol CreateRequestDelegate: AnyObject {
+    func didUpdateProfile(with num: Int)
+}
+
+protocol FoundDelegate: AnyObject {
+    func didUpdateProfile(with num: Int)
 }

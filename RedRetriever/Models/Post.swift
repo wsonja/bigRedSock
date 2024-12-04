@@ -14,6 +14,8 @@ struct Post {
     let title: String
     let location: String
     let time: String
+    let date: Date
+    let status: String
 }
 
 extension Post {
@@ -24,7 +26,9 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "12",
+            date: Date(timeIntervalSince1970: 1713585103),
+            status: "not found"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -32,7 +36,9 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "12",
+            date: Date(timeIntervalSince1970: 1713585103),
+            status: "not found"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -40,7 +46,9 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "12",
+            date: Date(timeIntervalSince1970: 1713585103),
+            status: "not found"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -48,7 +56,9 @@ extension Post {
             image: "appdev_logo",
             title: "Water bottle",
             location: "Gates Hall",
-            time: "12"
+            time: "12",
+            date: Date(timeIntervalSince1970: 1713585103),
+            status: "not found"
         ),
     ]
 }
