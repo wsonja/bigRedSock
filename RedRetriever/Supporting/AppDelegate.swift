@@ -9,6 +9,9 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var window: UIWindow?
+    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -29,4 +32,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+}
+
+
+class MainTabBarController: UITabBarController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Create instances of your view controllers
+        let homeVC = HomeVC()
+        let requestsVC = RequestsVC()
+        
+        // Set titles and images for the tabs
+        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        requestsVC.tabBarItem = UITabBarItem(title: "Requests", image: UIImage(systemName: "questionmark.circle"), tag: 1)
+        
+        // Set up the view controllers for the tab bar controller
+        self.viewControllers = [homeVC, requestsVC]
+        
+        // Optionally, customize the appearance of the tab bar
+        self.tabBar.barTintColor = UIColor.white
+        self.tabBar.tintColor = UIColor.systemBlue
+    }
 }

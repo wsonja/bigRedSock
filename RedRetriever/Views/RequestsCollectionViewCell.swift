@@ -50,13 +50,13 @@ class RequestsCollectionViewCell: UICollectionViewCell {
     private func setupUI(){
 
         requestStatusLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        requestStatusLabel.textColor = .blue
+        requestStatusLabel.textColor = .darkGray
         
         requestDateLabel.font = .systemFont(ofSize: 16, weight: .medium)
         requestDateLabel.textColor = .darkGray
         
         requestDescriptionLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        requestDescriptionLabel.textColor = .black
+        requestDescriptionLabel.textColor = .darkGray
         
         // Set up a horizontal stack view to hold the three labels side by side
         let stackView = UIStackView(arrangedSubviews: [requestStatusLabel, requestDateLabel, requestDescriptionLabel])

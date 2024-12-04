@@ -17,6 +17,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
     // MARK: - Properties (view)
     private var requestsCollectionView: UICollectionView!
     private var headerView: UIView!
+    private var foundHeaderView: UIView!
     private let itemNumLabel = UILabel()
     
     // MARK: - Properties (data)
@@ -30,16 +31,24 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
 
         
-        title = "Requests"
+        title = ""
         setupRequestHeadings()
         setuprequestsCollectionView()
+        setupFoundHeadings()
 
     }
     
     //MARK: set up views
+    
+    
     private func setupRequestHeadings() {
         // Create a view to hold the headings
         headerView = UIView()
+        
+        let headLabel = UILabel()
+        headLabel.text = "Requests"
+        headLabel.textAlignment = .center
+        headLabel.font = UIFont.boldSystemFont(ofSize: 20)
         
         // Create labels for the headings
         let statusLabel = UILabel()
@@ -61,6 +70,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         headerView.addSubview(statusLabel)
         headerView.addSubview(dateLabel)
         headerView.addSubview(descriptionLabel)
+        headerView.addSubview(headLabel)
         
         view.addSubview(headerView)
         
@@ -69,29 +79,37 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        headLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             // Header view constraints (top position)
-            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            headerView.heightAnchor.constraint(equalToConstant: 50),
+            headerView.heightAnchor.constraint(equalToConstant: 70),
+            
+            //headlabel
+            headLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            headLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            headLabel.heightAnchor.constraint(equalToConstant: 30),
+            headLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            
             
             // Status label constraints
             statusLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-            statusLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            statusLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             statusLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
             statusLabel.widthAnchor.constraint(equalToConstant: 90),
             
             // Date label constraints
             dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            dateLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             dateLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
             dateLabel.widthAnchor.constraint(equalToConstant: 120),
             
             // Description label constraints
             descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             descriptionLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
         ])
@@ -129,6 +147,85 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
             requestsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             requestsCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(posts.count*35))
             ])
+    }
+    
+    
+    private func setupFoundHeadings() {
+        // Create a view to hold the headings
+        foundHeaderView = UIView()
+        
+        let headLabel = UILabel()
+        headLabel.text = "Items Found"
+        headLabel.textAlignment = .center
+        headLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        
+        // Create labels for the headings
+        let statusLabel = UILabel()
+        statusLabel.text = "Status"
+        statusLabel.textAlignment = .center
+        statusLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        let dateLabel = UILabel()
+        dateLabel.text = "Date"
+        dateLabel.textAlignment = .center
+        dateLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = "Description"
+        descriptionLabel.textAlignment = .center
+        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        // Add labels to the header view
+        foundHeaderView.addSubview(headLabel)
+        foundHeaderView.addSubview(statusLabel)
+        foundHeaderView.addSubview(dateLabel)
+        foundHeaderView.addSubview(descriptionLabel)
+        
+        
+        view.addSubview(foundHeaderView)
+        
+        // Layout the labels using Auto Layout
+        foundHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        headLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            // Header view constraints (top position)
+            foundHeaderView.topAnchor.constraint(equalTo: requestsCollectionView.bottomAnchor, constant: 40),
+            foundHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            foundHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            foundHeaderView.heightAnchor.constraint(equalToConstant: 80),
+            
+            
+            //headlabel
+            headLabel.leadingAnchor.constraint(equalTo: foundHeaderView.leadingAnchor),
+            headLabel.topAnchor.constraint(equalTo: foundHeaderView.topAnchor),
+            headLabel.heightAnchor.constraint(equalToConstant: 30),
+            headLabel.centerXAnchor.constraint(equalTo: foundHeaderView.centerXAnchor),
+            
+            
+
+            // Status label constraints
+            statusLabel.leadingAnchor.constraint(equalTo: foundHeaderView.leadingAnchor),
+            statusLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            statusLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
+            statusLabel.widthAnchor.constraint(equalToConstant: 90),
+            
+            // Date label constraints
+            dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor),
+            dateLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            dateLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
+            dateLabel.widthAnchor.constraint(equalToConstant: 120),
+            
+            // Description label constraints
+            descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            descriptionLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: foundHeaderView.trailingAnchor),
+        ])
+        
     }
 
     init() {
