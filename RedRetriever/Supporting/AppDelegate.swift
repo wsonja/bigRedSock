@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import GoogleSignIn
+import GoogleSignInSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,8 +17,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        // Initialize Google Sign-In
+        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+            if let error = error {
+                print("Error restoring sign-in: \(error.localizedDescription)")
+            } else {
+                print("User restored: \(String(describing: user?.profile?.name))")
+            }
+        }
         return true
     }
+    
+    func application(
+            _ app: UIApplication,
+            open url: URL,
+            options: [UIApplication.OpenURLOptionsKey : Any] = [:]
+        ) -> Bool {
+            return GIDSignIn.sharedInstance.handle(url)
+        }
 
     // MARK: UISceneSession Lifecycle
 
@@ -35,24 +53,69 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("Current Tab Bar Item Title: \(self.tabBarItem.title ?? "No Title")")
+    }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+            super.viewDidLoad()
+            
+            self.setupTabs()
+            
+    //        self.selectedIndex = 0
+            
+            self.tabBar.barTintColor = UIColor.a4.white
+            self.tabBar.tintColor = UIColor.a4.ruby
+            self.tabBar.unselectedItemTintColor = .black
         
-        // Create instances of your view controllers
-        let homeVC = HomeVC()
-        let requestsVC = RequestsVC()
+        self.delegate = self
+            
+        }
         
-        // Set titles and images for the tabs
-        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-        requestsVC.tabBarItem = UITabBarItem(title: "Requests", image: UIImage(systemName: "questionmark.circle"), tag: 1)
+        // MARK: - Tab Setup
+        private func setupTabs() {
+            let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: HomeVC())
+            let tickets = self.createNav(with: "Requests", and: UIImage(systemName: "envelope.badge"), vc: RequestsVC())
+            let profile = self.createNav(with: "Profile", and: UIImage(systemName: "person.crop.circle"), vc: ProfileVC())
+            
+            self.setViewControllers([home, tickets, profile], animated: true)
+        }
         
-        // Set up the view controllers for the tab bar controller
-        self.viewControllers = [homeVC, requestsVC]
-        
-        // Optionally, customize the appearance of the tab bar
-        self.tabBar.barTintColor = UIColor.white
-        self.tabBar.tintColor = UIColor.systemBlue
-    }
+        private func createNav(with title: String, and image: UIImage?, vc: UIViewController) -> UINavigationController {
+            let nav = UINavigationController(rootViewController: vc)
+            
+            nav.tabBarItem.title = title
+            nav.tabBarItem.image = image
+            
+    //        nav.viewControllers.first?.navigationItem.title = title + " Controller"
+    //
+    //        nav.viewControllers.first?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Button", style: .plain, target: nil, action: nil)
+            
+            return nav
+        }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+            print("Switched to tab with title: \(viewController.tabBarItem.title ?? "No Title")")
+        }
+    
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        
+//        // Create instances of your view controllers
+//        let homeVC = HomeVC()
+//        let requestsVC = RequestsVC()
+//        
+//        // Set titles and images for the tabs
+//        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+//        requestsVC.tabBarItem = UITabBarItem(title: "Requests", image: UIImage(systemName: "questionmark.circle"), tag: 1)
+//        
+//        // Set up the view controllers for the tab bar controller
+//        self.viewControllers = [homeVC, requestsVC]
+//        
+//        // Optionally, customize the appearance of the tab bar
+//        self.tabBar.barTintColor = UIColor.white
+//        self.tabBar.tintColor = UIColor.systemBlue
+//    }
 }

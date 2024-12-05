@@ -20,6 +20,7 @@ class MatchedVC: UIViewController {
     private let noButton = UIButton()
     
     weak var delegate: MatchedDelegate?
+
     
     // MARK: - Properties (data)
     private var posts = Post.dummyData
@@ -90,7 +91,7 @@ class MatchedVC: UIViewController {
         ])
         
         yesButton.setTitle("yes", for: .normal)
-        yesButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
+        yesButton.backgroundColor = UIColor.a4.ruby
         yesButton.layer.cornerRadius = 8
         yesButton.setTitleColor(.white, for: .normal)
         
@@ -107,7 +108,7 @@ class MatchedVC: UIViewController {
         yesButton.addTarget(self, action: #selector(yesTapped), for: .touchUpInside)
         
         noButton.setTitle("no", for: .normal)
-        noButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
+        noButton.backgroundColor = UIColor.a4.ruby
         noButton.layer.cornerRadius = 8
         noButton.setTitleColor(.white, for: .normal)
         
@@ -126,16 +127,28 @@ class MatchedVC: UIViewController {
     }
     
     @objc func yesTapped() {
-        // do some API stuff - delete??
-        delegate?.didUpdateProfile(with: 1)
-        navigationController?.popViewController(animated: true)
+        // do some API stuff - delete?? change to found???
+        let alert = UIAlertController(title: "Great!", message: "Please go to \(posts[0].location) to pick up your item.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+//        delegate?.didUpdateProfile(with: 1)
+//        navigationController?.popViewController(animated: true)
     }
     
     
     @objc func noTapped() {
-        // do some API stuff - delete??
-        delegate?.didUpdateProfile(with: 0)
-        navigationController?.popViewController(animated: true)
+        // do some API stuff - delete?? change to not found
+        let alert = UIAlertController(title: "Sorry :(", message: "We'll keep looking for it.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+//        delegate?.didUpdateProfile(with: 0)
+//        navigationController?.popViewController(animated: true)
     }
     
     func configure(post: Post){

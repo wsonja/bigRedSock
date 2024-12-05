@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDelegate {
+
+    
     func didUpdateProfile(with num: Int) {
         itemNumLabel.text = "No. of items: " + String(num)
     }
@@ -17,6 +19,9 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     // MARK: - Properties (view)
     private var postCollectionView: UICollectionView!
     private var createPostCollectionView: UICollectionView!
+    private var titleView: TitleView!
+    private let leaderboardTableView = UITableView()
+    
     private let createRequestButton = UIButton()
     private let foundButton = UIButton()
     private let requestsButton = UIButton()
@@ -27,27 +32,63 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     
     // MARK: - Properties (data)
     private var posts = Post.dummyData
+    private let users = User.dummyData
+    
+    
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        self.tabBarItem.title = "Home"
         view.backgroundColor = UIColor.white
         
-        
-        setupPostCollectionView()
+        setupTitleView()
         setupcreateRequestButton()
         setupfoundButton()
+        setupLeaderboard()
+        setupPostCollectionView()
         setupRequestsButton()
         setupRequestDetailButton()
         setupProfileButton()
         setupMatchedButton()
-        // setupCreatePostCollectionView()
+        
+        
+    
     }
     
     // MARK: - Set Up Views
+    
+    private func setupLeaderboard(){
+        leaderboardTableView.dataSource = self
+        leaderboardTableView.delegate = self
+        leaderboardTableView.register(LeaderboardCell.self, forCellReuseIdentifier: "LeaderboardCell")
+        leaderboardTableView.frame = view.bounds
+        view.addSubview(leaderboardTableView)
+        
+        leaderboardTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            leaderboardTableView.topAnchor.constraint(equalTo: foundButton.bottomAnchor, constant: 30),
+            leaderboardTableView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
+            leaderboardTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32)
+        ])
+    }
+    
+    private func setupTitleView() {
+        titleView = TitleView(title: "Home", inset: .init(top: -20, left: 32, bottom: 0, right: 0))
+        titleView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleView)
+        
+        NSLayoutConstraint.activate([
+            titleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleView.heightAnchor.constraint(equalToConstant: 10) // Adjust the height as needed
+        ])
+    }
+    
+    
     private func setupPostCollectionView() {
         let padding = 20
         let layout = UICollectionViewFlowLayout()
@@ -75,42 +116,12 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         NSLayoutConstraint.activate([
             postCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             postCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            postCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            postCollectionView.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 20),
             postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 300)
         ])
     }
     
-    private func setupCreatePostCollectionView() {
-        let padding = 20
-        let layout = UICollectionViewFlowLayout()
-        
-        // layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        
-        // Initialize CollectionView with the layout
-        createPostCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        createPostCollectionView.register(CreatePostCollectionViewCell.self, forCellWithReuseIdentifier: CreatePostCollectionViewCell.reuse)
-        createPostCollectionView.delegate = self
-        createPostCollectionView.dataSource = self
-        
-//        collectionView.backgroundColor = .red
-        
-        createPostCollectionView.alwaysBounceVertical = true
-        
-        view.addSubview(createPostCollectionView)
-        
-        //postCollectionView.refreshControl = refreshControl
-        createPostCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            createPostCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
-            createPostCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            createPostCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: CGFloat(padding)),
-//            createPostCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        ])
-    }
-    
+   
     private func setupMatchedButton() {
         matchedButton.setTitle("Match", for: .normal)
         matchedButton.setTitleColor(UIColor.white, for: .normal)
@@ -219,7 +230,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         createRequestButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            createRequestButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -152),
+            createRequestButton.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 20),
             createRequestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             createRequestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             createRequestButton.heightAnchor.constraint(equalToConstant: 56),
@@ -246,7 +257,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         foundButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            foundButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64),
+            foundButton.topAnchor.constraint(equalTo: createRequestButton.bottomAnchor, constant:20),
             foundButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             foundButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             foundButton.heightAnchor.constraint(equalToConstant: 56),
@@ -307,6 +318,44 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
     
 //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //    }
+    
+    
+        
+       
+}
+
+
+extension HomeVC: UITableViewDataSource {
+    // UITableViewDataSource methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return users.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "LeaderboardCell", for: indexPath) as? LeaderboardCell else {
+                return UITableViewCell()
+            }
+            
+            let user = users[indexPath.row]
+            
+            // Configure cell
+            cell.rankLabel.text = "\(indexPath.row + 1)"
+            cell.nameLabel.text = user.name
+            cell.pointsLabel.text = "\(user.points) points"
+            
+            return cell
+    }
+    
+}
+
+extension HomeVC: UITableViewDelegate{
+    // UITableViewDelegate (optional for customization)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let user = users[indexPath.row]
+        print("Selected: \(user.name) with \(user.points) points")
+    }
+    
 }
 
 protocol CreateRequestDelegate: AnyObject {
@@ -319,4 +368,89 @@ protocol FoundDelegate: AnyObject {
 
 protocol MatchedDelegate: AnyObject {
     func didUpdateProfile(with num: Int)
+}
+
+class TitleView: UIView {
+
+    private let label: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.textColor = UIColor.a4.slateBlue
+        return label
+    }()
+
+    var title: String? {
+        get { return label.text }
+        set { label.text = newValue }
+    }
+
+    convenience init(title: String, inset: UIEdgeInsets) {
+        self.init()
+
+        label.text = title
+
+        addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: topAnchor, constant: inset.top).isActive = true
+        label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset.left).isActive = true
+        bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: inset.bottom).isActive = true
+        trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: inset.right).isActive = true
+        
+        backgroundColor = .white
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+
+class LeaderboardCell: UITableViewCell {
+    let rankLabel = UILabel()
+    let nameLabel = UILabel()
+    let pointsLabel = UILabel()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // Configure rankLabel
+        rankLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        rankLabel.textAlignment = .center
+        contentView.addSubview(rankLabel)
+        
+        // Configure nameLabel
+        nameLabel.font = UIFont.systemFont(ofSize: 16)
+        contentView.addSubview(nameLabel)
+        
+        // Configure pointsLabel
+        pointsLabel.font = UIFont.systemFont(ofSize: 16)
+        pointsLabel.textAlignment = .right
+        contentView.addSubview(pointsLabel)
+        
+        // Layout
+        rankLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        pointsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            rankLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            rankLabel.widthAnchor.constraint(equalToConstant: 30),
+            rankLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            nameLabel.leadingAnchor.constraint(equalTo: rankLabel.trailingAnchor, constant: 10),
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            pointsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            pointsLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

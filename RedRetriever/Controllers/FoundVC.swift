@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FoundVC: UIViewController {
+class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - Properties (view)
     private let nameLabel = UILabel()
@@ -24,7 +24,7 @@ class FoundVC: UIViewController {
     private let descriptionTextField = PaddedTextField()
     
     private let uploadLabel = UILabel()
-    private let uploadButton = UIButton()
+    private let uploadButton = UIButton(type: .system)
     
     private let submitButton = UIButton()
     
@@ -110,12 +110,13 @@ class FoundVC: UIViewController {
         uploadButton.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
         uploadButton.layer.cornerRadius = 8
         uploadButton.layer.borderWidth = 2
-        uploadButton.layer.borderColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1).cgColor
-        uploadButton.setTitleColor(UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1), for: .normal)
+        uploadButton.layer.borderColor = UIColor.a4.ruby.cgColor
+        uploadButton.setTitleColor(UIColor.a4.ruby, for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        uploadButton.addTarget(self, action: #selector(selectImage), for: .touchUpInside)
         
         submitButton.setTitle("Submit", for: .normal)
-        submitButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
+        submitButton.backgroundColor = UIColor.a4.ruby
         submitButton.layer.cornerRadius = 8
         submitButton.setTitleColor(.white, for: .normal)
         
@@ -242,9 +243,79 @@ class FoundVC: UIViewController {
     }
     
     @objc func submitTapped() {
-        delegate?.didUpdateProfile(with: 1)
-        navigationController?.popViewController(animated: true)
+        // some api stuff to +5points -update database to add this found thing
+        let alert = UIAlertController(title: "+5 points!", message: "Good work retriever!", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+        
+//        delegate?.didUpdateProfile(with: 1)
+//        navigationController?.popViewController(animated: true)
     }
+    
+    @objc func selectImage() {
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.allowsEditing = true
+            picker.sourceType = .photoLibrary // Change to .camera for camera
+            present(picker, animated: true, completion: nil)
+        }
+
+        // UIImagePickerControllerDelegate method: When an image is selected
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            picker.dismiss(animated: true, completion: nil)
+
+            // Get the selected image
+            if let editedImage = info[.editedImage] as? UIImage {
+//                imageView.image = editedImage
+                uploadImageToServer(image: editedImage)
+            } else if let originalImage = info[.originalImage] as? UIImage {
+//                imageView.image = originalImage
+                uploadImageToServer(image: originalImage)
+            }
+        }
+
+        // UIImagePickerControllerDelegate method: If user cancels
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true, completion: nil)
+        }
+
+        // Function to upload the image to a server
+        func uploadImageToServer(image: UIImage) {
+            // Convert image to data
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+            
+            // Create a URL request (replace with your server URL)
+            let url = URL(string: "https://your-server.com/upload")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            // Define the content type for multipart form-data
+            let boundary = UUID().uuidString
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            
+            // Create multipart body
+            var body = Data()
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            body.append(imageData)
+            body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+            request.httpBody = body
+
+            // Perform the request
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error uploading image: \(error.localizedDescription)")
+                    return
+                }
+                print("Image uploaded successfully!")
+            }
+            task.resume()
+        }
     
 
 

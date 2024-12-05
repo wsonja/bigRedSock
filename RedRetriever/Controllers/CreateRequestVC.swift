@@ -123,7 +123,7 @@ class CreateRequestVC: UIViewController {
         
         // Configure submit button
         submitButton.setTitle("Submit", for: .normal)
-        submitButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
+        submitButton.backgroundColor = UIColor.a4.ruby
         submitButton.layer.cornerRadius = 8
         submitButton.setTitleColor(.white, for: .normal)
 
@@ -238,8 +238,15 @@ class CreateRequestVC: UIViewController {
     }
     
     @objc func submitTapped() {
-        delegate?.didUpdateProfile(with: 1)
-        navigationController?.popViewController(animated: true)
+        // update api add request
+        let alert = UIAlertController(title: "Thank you!", message: "Thanks for filling out the Item Request Form. We will work to find and match your item. ", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+//        delegate?.didUpdateProfile(with: 1)
+//        navigationController?.popViewController(animated: true)
     }
     
     

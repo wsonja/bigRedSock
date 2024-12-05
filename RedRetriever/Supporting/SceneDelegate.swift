@@ -14,21 +14,44 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // 1. Capture the scene
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        // 2. Create a new UIWindow and pass in a UIWindowScene
+
+        // Create the UIWindow
         let window = UIWindow(windowScene: windowScene)
 
-        // 3. Create a view hierarchy programmatically
-        let rootVC = HomeVC()
-        let navController = UINavigationController(rootViewController: rootVC)
-        let tabBarController = MainTabBarController()
-        
-        // 4. Set the navigation controller as the window's root view controller
-        window.rootViewController = navController
+        // Check user login state
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        let initialViewController: UIViewController
 
-        // 5. Set the window and call makeKeyAndVisible()
+        if isUserLoggedIn {
+            // User is logged in, show HomeVC
+//            initialViewController = HomeVC()
+            initialViewController = MainTabBarController()
+        } else {
+            // User is not logged in, show LoginVC
+            initialViewController = LoginVC()
+        }
+
+        // Set the root view controller
+        window.rootViewController = UINavigationController(rootViewController: initialViewController)
+
         self.window = window
         window.makeKeyAndVisible()
+        
+        
+//        // 2. Create a new UIWindow and pass in a UIWindowScene
+//        let window = UIWindow(windowScene: windowScene)
+//
+//        // 3. Create a view hierarchy programmatically
+//        let rootVC = LoginVC()
+//        let navController = UINavigationController(rootViewController: rootVC)
+//        let tabBarController = MainTabBarController()
+//        
+//        // 4. Set the navigation controller as the window's root view controller
+//        window.rootViewController = navController
+//
+//        // 5. Set the window and call makeKeyAndVisible()
+//        self.window = window
+//        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

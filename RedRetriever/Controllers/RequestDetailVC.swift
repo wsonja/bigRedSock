@@ -91,7 +91,7 @@ class RequestDetailVC: UIViewController {
         descriptionContent.textColor = UIColor.darkGray
 
         rescindButton.setTitle("Rescind", for: .normal)
-        rescindButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
+        rescindButton.backgroundColor = UIColor.a4.ruby
         rescindButton.layer.cornerRadius = 8
         rescindButton.setTitleColor(.white, for: .normal)
 
@@ -184,8 +184,14 @@ class RequestDetailVC: UIViewController {
     
     @objc func rescindTapped() {
         // do some API stuff - delete??
-        delegate?.didUpdateProfile(with: 1)
-        navigationController?.popViewController(animated: true)
+        let alert = UIAlertController(title: "Ok!", message: "Request successfully rescinded.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+//        delegate?.didUpdateProfile(with: 1)
+//        navigationController?.popViewController(animated: true)
     }
     
     func configure(with post: Post) {
