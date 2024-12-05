@@ -32,6 +32,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
 
         
         title = ""
+        title = ""
         setupRequestHeadings()
         setuprequestsCollectionView()
         setupFoundHeadings()

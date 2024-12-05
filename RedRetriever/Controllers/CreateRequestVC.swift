@@ -35,7 +35,7 @@ class CreateRequestVC: UIViewController {
     // MARK: - Properties (data)
     private var name = String()
     private var email = String()
-    private var phone = Int()
+    private var phone = String()
     private var date = Date()
     private var location = String()
     private var desc = String()
@@ -223,7 +223,7 @@ class CreateRequestVC: UIViewController {
             navigationController?.popViewController(animated: true)
         }
     
-    init(name: String, email: String, phone: Int, date: Date, location: String, desc: String) {
+    init(name: String, email: String, phone: String, date: Date, location: String, desc: String) {
         self.name = name
         self.email = email
         self.phone = phone

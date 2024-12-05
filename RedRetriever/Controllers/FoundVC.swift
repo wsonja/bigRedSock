@@ -12,13 +12,16 @@ class FoundVC: UIViewController {
 
     // MARK: - Properties (view)
     private let nameLabel = UILabel()
+    private let nameTextField = UITextField()
     
     private let dateLabel = UILabel()
+    private let dateField = UIDatePicker()
     
     private let locationLabel = UILabel()
+    private let locationTextField = UITextField()
     
     private let descriptionLabel = UILabel()
-    private let descriptionContent = UILabel()
+    private let descriptionTextField = PaddedTextField()
     
     private let uploadLabel = UILabel()
     private let uploadButton = UIButton()
@@ -31,7 +34,6 @@ class FoundVC: UIViewController {
     private var date = Date()
     private var location = String()
     private var desc = String()
-    let posts = Post.dummyData
     
     weak var delegate: FoundDelegate?
     
@@ -44,7 +46,6 @@ class FoundVC: UIViewController {
         self.title = "Item Found"
         view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
         setupUI()
-        configure(with: posts[0])
         
         
         let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
@@ -61,7 +62,7 @@ class FoundVC: UIViewController {
         nameLabel.text = "Name: "
         nameLabel.font = .systemFont(ofSize: 20, weight: .medium)
         nameLabel.textColor = UIColor.black
-        
+       
         dateLabel.text = "Date: "
         dateLabel.font = .systemFont(ofSize: 20, weight: .medium)
         dateLabel.textColor = UIColor.black
@@ -74,8 +75,30 @@ class FoundVC: UIViewController {
         descriptionLabel.font = .systemFont(ofSize: 20, weight: .medium)
         descriptionLabel.textColor = UIColor.black
         
-        descriptionContent.font = .systemFont(ofSize: 18, weight: .medium)
-        descriptionContent.textColor = UIColor.darkGray
+        // Configure text fields
+        nameTextField.placeholder = "Enter your name"
+        nameTextField.borderStyle = .roundedRect
+        nameTextField.font = .systemFont(ofSize: 16, weight: .medium)
+        nameTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+       
+        locationTextField.placeholder = "Enter your location"
+        locationTextField.borderStyle = .roundedRect
+        locationTextField.font = .systemFont(ofSize: 16, weight: .medium)
+        locationTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        
+        descriptionTextField.placeholder = "Enter description"
+        descriptionTextField.borderStyle = .roundedRect
+        descriptionTextField.font = .systemFont(ofSize: 16, weight: .medium)
+        descriptionTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        
+        // Configure date picker
+        dateField.datePickerMode = .date
+
+        for subview in dateField.subviews {
+                    if let label = subview as? UILabel {
+                        label.font = UIFont.systemFont(ofSize: 10) // Adjust font size
+                    }
+                }
         
         uploadLabel.text = "Please upload an image of the item."
         uploadLabel.font = .systemFont(ofSize: 18, weight: .medium)
@@ -95,16 +118,23 @@ class FoundVC: UIViewController {
         submitButton.backgroundColor = UIColor(red: 0/255.0, green: 76/255.0, blue: 178/255.0, alpha: 1)
         submitButton.layer.cornerRadius = 8
         submitButton.setTitleColor(.white, for: .normal)
-
+        
+        // Create a UIStackView for each label and text field pair
+        let nameStackView = createStackView(label: nameLabel, textField: nameTextField)
+        let dateStackView = createStackView(label: dateLabel, textField: dateField)
+        let locationStackView = createStackView(label: locationLabel, textField: locationTextField)
+//        let descriptionStackView = createStackView(label: descriptionLabel, textField: descriptionTextField)
+        
         // Create a vertical stack view to arrange all pairs
         let mainStackView = UIStackView(arrangedSubviews: [
-            nameLabel,
-            dateLabel,
-            locationLabel,
-            descriptionLabel,
-        
+            nameStackView,
+            dateStackView,
+            locationStackView,
+//            descriptionStackView
         ])
         
+        
+        dateField.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
         
         // Configure the main stack view (vertical stack view)
         mainStackView.axis = .vertical
@@ -117,18 +147,31 @@ class FoundVC: UIViewController {
         
         // Add constraints for the main stack view
         NSLayoutConstraint.activate([
+            dateStackView.heightAnchor.constraint(equalToConstant: 40),
             mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             mainStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
             mainStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
         ])
         
-        view.addSubview(descriptionContent)
-        descriptionContent.translatesAutoresizingMaskIntoConstraints = false
-        descriptionContent.numberOfLines = 0
-        descriptionContent.lineBreakMode = .byWordWrapping
         
         
+        view.addSubview(descriptionLabel)
+        view.addSubview(descriptionTextField)
         
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextField.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextField.contentVerticalAlignment = .top
+
+        
+        NSLayoutConstraint.activate([
+            descriptionLabel.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 26),
+            descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            descriptionTextField.heightAnchor.constraint(equalToConstant: 250),
+            descriptionTextField.widthAnchor.constraint(equalToConstant: 335),
+            descriptionTextField.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            descriptionTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
+            
+        ])
         
         view.addSubview(uploadLabel)
         view.addSubview(uploadButton)
@@ -139,10 +182,7 @@ class FoundVC: UIViewController {
        
         
         NSLayoutConstraint.activate([
-            descriptionContent.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant:10),
-            descriptionContent.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
-            descriptionContent.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
-            uploadLabel.topAnchor.constraint(equalTo: descriptionContent.bottomAnchor, constant: 26),
+            uploadLabel.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 26),
             uploadLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
             uploadButton.topAnchor.constraint(equalTo: uploadLabel.bottomAnchor, constant: 10),
             uploadButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
@@ -206,42 +246,6 @@ class FoundVC: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    func configure(with post: Post) {
-        // Create an attributed string for the nameLabel
-        let nameText = "Name: \(post.title)"
-        let nameAttributedString = NSMutableAttributedString(string: nameText)
-        let nameValueRange = (nameText as NSString).range(of: post.title)  // Actual name part
-        nameAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: nameValueRange) // smaller font
-        nameAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: nameValueRange)  //  dark gray
-        nameLabel.attributedText = nameAttributedString
-        
-        // Create an attributed string for the descriptionLabel
-        let descriptionText = post.description
-        let descriptionAttributedString = NSMutableAttributedString(string: descriptionText)
-        let descriptionValueRange = (descriptionText as NSString).range(of: post.description)
-        descriptionAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: descriptionValueRange)
-        descriptionAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: descriptionValueRange)
-        descriptionContent.attributedText = descriptionAttributedString
-        
-        // Format the date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = dateFormatter.string(from: post.date)
-        let dateText = "Date: \(dateString)"
-        let dateAttributedString = NSMutableAttributedString(string: dateText)
-        let dateValueRange = (dateText as NSString).range(of: dateString)
-        dateAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: dateValueRange)
-        dateAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: dateValueRange)
-        dateLabel.attributedText = dateAttributedString
-        
-        // Create an attributed string for the locationLabel
-        let locationText = "Location: \(post.location)"
-        let locationAttributedString = NSMutableAttributedString(string: locationText)
-        let locationValueRange = (locationText as NSString).range(of: post.location)
-        locationAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: locationValueRange)
-        locationAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: locationValueRange)
-        locationLabel.attributedText = locationAttributedString
-    }
 
 
     

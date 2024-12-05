@@ -16,6 +16,8 @@ struct Post {
     let time: String
     let date: Date
     let status: String
+    let email: String
+    let phone: String
 }
 
 extension Post {
@@ -28,7 +30,9 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found"
+            status: "not found",
+            email: "sonja.hinting@gmail.com",
+            phone: "1234567890"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -38,7 +42,9 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found"
+            status: "not found",
+            email: "sonja.hinting@gmail.com",
+            phone: "1234567890"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -48,7 +54,9 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found"
+            status: "not found",
+            email: "sonja.hinting@gmail.com",
+            phone: "1234567890"
         ),
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
@@ -58,7 +66,9 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found"
+            status: "not found",
+            email: "sonja.hinting@gmail.com",
+            phone: "1234567890"
         ),
     ]
 }

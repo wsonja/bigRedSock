@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
+class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDelegate {
     func didUpdateProfile(with num: Int) {
         itemNumLabel.text = "No. of items: " + String(num)
     }
@@ -20,6 +20,9 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
     private let createRequestButton = UIButton()
     private let foundButton = UIButton()
     private let requestsButton = UIButton()
+    private let requestDetailButton = UIButton()
+    private let profileButton = UIButton()
+    private let matchedButton = UIButton()
     private let itemNumLabel = UILabel()
     
     // MARK: - Properties (data)
@@ -33,10 +36,14 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = UIColor.white
         
+        
         setupPostCollectionView()
         setupcreateRequestButton()
         setupfoundButton()
         setupRequestsButton()
+        setupRequestDetailButton()
+        setupProfileButton()
+        setupMatchedButton()
         // setupCreatePostCollectionView()
     }
     
@@ -104,6 +111,78 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         ])
     }
     
+    private func setupMatchedButton() {
+        matchedButton.setTitle("Match", for: .normal)
+        matchedButton.setTitleColor(UIColor.white, for: .normal)
+        matchedButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        matchedButton.layer.cornerRadius = 16
+
+        view.addSubview(matchedButton)
+        matchedButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            matchedButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -422),
+            matchedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            matchedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            matchedButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        matchedButton.addTarget(self, action: #selector(matchedTapped), for: .touchUpInside)
+    }
+    
+    @objc func matchedTapped() {
+        let MatchedVC = MatchedVC()
+        navigationController?.pushViewController(MatchedVC, animated: true)
+    }
+    
+    private func setupProfileButton() {
+        profileButton.setTitle("Profile", for: .normal)
+        profileButton.setTitleColor(UIColor.white, for: .normal)
+        profileButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        profileButton.layer.cornerRadius = 16
+
+        view.addSubview(profileButton)
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            profileButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -422),
+            profileButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            profileButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        profileButton.addTarget(self, action: #selector(profileTapped), for: .touchUpInside)
+    }
+    
+    @objc func profileTapped() {
+        let ProfileVC = ProfileVC()
+        navigationController?.pushViewController(ProfileVC, animated: true)
+    }
+    
+    private func setupRequestDetailButton() {
+        requestDetailButton.setTitle("Request details", for: .normal)
+        requestDetailButton.setTitleColor(UIColor.white, for: .normal)
+        requestDetailButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+        requestDetailButton.layer.cornerRadius = 16
+
+        view.addSubview(requestDetailButton)
+        requestDetailButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            requestDetailButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -332),
+            requestDetailButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            requestDetailButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            requestDetailButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        
+        requestDetailButton.addTarget(self, action: #selector(requestDetailTapped), for: .touchUpInside)
+    }
+    
+    @objc func requestDetailTapped() {
+        let RequestDetailVC = RequestDetailVC()
+        navigationController?.pushViewController(RequestDetailVC, animated: true)
+    }
+    
     private func setupRequestsButton() {
         requestsButton.setTitle("Your Requests", for: .normal)
         requestsButton.setTitleColor(UIColor.white, for: .normal)
@@ -114,7 +193,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         requestsButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            requestsButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -252),
+            requestsButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -242),
             requestsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             requestsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             requestsButton.heightAnchor.constraint(equalToConstant: 56),
@@ -151,7 +230,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate {
     
     
     @objc func createRequestTapped() {
-        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: 12, date: Date(), location: "String", desc: "String")
+        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
         CreateRequestVC.delegate = self
         navigationController?.pushViewController(CreateRequestVC, animated: true)
     }
@@ -235,5 +314,9 @@ protocol CreateRequestDelegate: AnyObject {
 }
 
 protocol FoundDelegate: AnyObject {
+    func didUpdateProfile(with num: Int)
+}
+
+protocol MatchedDelegate: AnyObject {
     func didUpdateProfile(with num: Int)
 }
