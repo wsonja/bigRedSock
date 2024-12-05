@@ -33,7 +33,6 @@ class HomeVC: UIViewController {
     
     // MARK: - Set Up Views
     private func setupCreatePostCollectionView() {
-        print("setupcreatepostcollectionview")
         let padding = 20
         let layout = UICollectionViewFlowLayout()
         

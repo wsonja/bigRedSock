@@ -149,7 +149,7 @@ class ItemVC: UIViewController {
             yesButton.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
-                yesButton.topAnchor.constraint(equalTo: postLocation.topAnchor, constant: 100),
+                yesButton.topAnchor.constraint(equalTo: postLocation.topAnchor, constant: 40),
                 yesButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20),
                 yesButton.widthAnchor.constraint(equalToConstant: 100),
                 yesButton.heightAnchor.constraint(equalToConstant: 50),
@@ -168,7 +168,7 @@ class ItemVC: UIViewController {
             noButton.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
-                noButton.topAnchor.constraint(equalTo: postLocation.topAnchor, constant: 100),
+                noButton.topAnchor.constraint(equalTo: postLocation.topAnchor, constant: 40),
                 noButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -20),
                 noButton.widthAnchor.constraint(equalToConstant: 100),
                 noButton.heightAnchor.constraint(equalToConstant: 50),
