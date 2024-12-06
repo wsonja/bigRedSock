@@ -45,14 +45,14 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         view.backgroundColor = UIColor.white
         
         setupTitleView()
-        setupcreateRequestButton()
-        setupfoundButton()
+//        setupcreateRequestButton()
+//        setupfoundButton()
+        setupImageButtons()
         setupLeaderboard()
-        setupPostCollectionView()
-        setupRequestsButton()
+        
         setupRequestDetailButton()
-        setupProfileButton()
         setupMatchedButton()
+        leaderboardTableView.reloadData()
         
         
     
@@ -61,9 +61,11 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     // MARK: - Set Up Views
     
     private func setupLeaderboard(){
+        
         leaderboardTableView.dataSource = self
         leaderboardTableView.delegate = self
         leaderboardTableView.register(LeaderboardCell.self, forCellReuseIdentifier: "LeaderboardCell")
+        print("hi")
         leaderboardTableView.frame = view.bounds
         view.addSubview(leaderboardTableView)
         
@@ -71,7 +73,9 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         NSLayoutConstraint.activate([
             leaderboardTableView.topAnchor.constraint(equalTo: foundButton.bottomAnchor, constant: 30),
             leaderboardTableView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
-            leaderboardTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32)
+            leaderboardTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
+            leaderboardTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
+            
         ])
     }
     
@@ -89,38 +93,6 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     }
     
     
-    private func setupPostCollectionView() {
-        let padding = 20
-        let layout = UICollectionViewFlowLayout()
-        
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 40
-        layout.minimumInteritemSpacing = 0
-        
-        // Initialize CollectionView with the layout
-        postCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        postCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.reuse)
-        postCollectionView.delegate = self
-        postCollectionView.dataSource = self
-        
-//        collectionView.backgroundColor = .red
-        
-        postCollectionView.alwaysBounceVertical = true
-        
-        view.addSubview(postCollectionView)
-        
-        //postCollectionView.refreshControl = refreshControl
-        
-        postCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            postCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
-            postCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-            postCollectionView.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 20),
-            postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 300)
-        ])
-    }
-    
    
     private func setupMatchedButton() {
         matchedButton.setTitle("Match", for: .normal)
@@ -132,7 +104,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         matchedButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            matchedButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -422),
+            matchedButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -122),
             matchedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             matchedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             matchedButton.heightAnchor.constraint(equalToConstant: 56),
@@ -146,29 +118,68 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         navigationController?.pushViewController(MatchedVC, animated: true)
     }
     
-    private func setupProfileButton() {
-        profileButton.setTitle("Profile", for: .normal)
-        profileButton.setTitleColor(UIColor.white, for: .normal)
-        profileButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
-        profileButton.layer.cornerRadius = 16
+    private func setupImageButtons() {
+        createRequestButton.setImage(UIImage(named: "lostwords"), for: .normal)
+        foundButton.setImage(UIImage(named: "foundwords"), for: .normal)
+        
+        createRequestButton.translatesAutoresizingMaskIntoConstraints = false
+        foundButton.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(profileButton)
-        profileButton.translatesAutoresizingMaskIntoConstraints = false
-        
+        // StackView to hold buttons side by side
+        let stackView = UIStackView(arrangedSubviews: [createRequestButton, foundButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 20 // Add space between buttons
+        stackView.alignment = .center
+
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            profileButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -422),
-            profileButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            profileButton.heightAnchor.constraint(equalToConstant: 56),
+            createRequestButton.widthAnchor.constraint(equalToConstant: 160),
+            createRequestButton.heightAnchor.constraint(equalToConstant: 160),
+            foundButton.widthAnchor.constraint(equalToConstant: 160),
+            foundButton.heightAnchor.constraint(equalToConstant: 160),
+            stackView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+    
         ])
-        
-        profileButton.addTarget(self, action: #selector(profileTapped), for: .touchUpInside)
+       
+        // Add actions for each button
+        createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
+        foundButton.addTarget(self, action: #selector(foundTapped), for: .touchUpInside)
     }
     
-    @objc func profileTapped() {
-        let ProfileVC = ProfileVC()
-        navigationController?.pushViewController(ProfileVC, animated: true)
-    }
+   
+    
+//    private func setupcreateRequestButton() {
+//            createRequestButton.setTitle("Create Request", for: .normal)
+//            createRequestButton.setTitleColor(UIColor.white, for: .normal)
+//            createRequestButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+//            createRequestButton.layer.cornerRadius = 16
+//
+//            view.addSubview(createRequestButton)
+//            createRequestButton.translatesAutoresizingMaskIntoConstraints = false
+//            
+//            NSLayoutConstraint.activate([
+//                createRequestButton.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 20),
+//                createRequestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+//                createRequestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+//                createRequestButton.heightAnchor.constraint(equalToConstant: 56),
+//            ])
+//            
+//            createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
+//        }
+        
+        
+        @objc func createRequestTapped() {
+            let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
+            CreateRequestVC.delegate = self
+            navigationController?.pushViewController(CreateRequestVC, animated: true)
+        }
+        
+    
+    
     
     private func setupRequestDetailButton() {
         requestDetailButton.setTitle("Request details", for: .normal)
@@ -180,7 +191,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         requestDetailButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            requestDetailButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -332),
+            requestDetailButton.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 20),
             requestDetailButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             requestDetailButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             requestDetailButton.heightAnchor.constraint(equalToConstant: 56),
@@ -194,77 +205,28 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         navigationController?.pushViewController(RequestDetailVC, animated: true)
     }
     
-    private func setupRequestsButton() {
-        requestsButton.setTitle("Your Requests", for: .normal)
-        requestsButton.setTitleColor(UIColor.white, for: .normal)
-        requestsButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
-        requestsButton.layer.cornerRadius = 16
-
-        view.addSubview(requestsButton)
-        requestsButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            requestsButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -242),
-            requestsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            requestsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            requestsButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
-        
-        requestsButton.addTarget(self, action: #selector(requestsTapped), for: .touchUpInside)
-    }
-    
-    @objc func requestsTapped() {
-        let RequestsVC = RequestsVC()
-        navigationController?.pushViewController(RequestsVC, animated: true)
-    }
     
     
-    
-    private func setupcreateRequestButton() {
-        createRequestButton.setTitle("Create Request", for: .normal)
-        createRequestButton.setTitleColor(UIColor.white, for: .normal)
-        createRequestButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
-        createRequestButton.layer.cornerRadius = 16
-
-        view.addSubview(createRequestButton)
-        createRequestButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            createRequestButton.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 20),
-            createRequestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            createRequestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            createRequestButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
-        
-        createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
-    }
-    
-    
-    @objc func createRequestTapped() {
-        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
-        CreateRequestVC.delegate = self
-        navigationController?.pushViewController(CreateRequestVC, animated: true)
-    }
-    
-    
-    private func setupfoundButton() {
-        foundButton.setTitle("Found Item", for: .normal)
-        foundButton.setTitleColor(UIColor.white, for: .normal)
-        foundButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
-        foundButton.layer.cornerRadius = 16
-
-        view.addSubview(foundButton)
-        foundButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            foundButton.topAnchor.constraint(equalTo: createRequestButton.bottomAnchor, constant:20),
-            foundButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            foundButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            foundButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
-        
-        foundButton.addTarget(self, action: #selector(foundTapped), for: .touchUpInside)
-    }
+//    
+//    
+//    private func setupfoundButton() {
+//        foundButton.setTitle("Found Item", for: .normal)
+//        foundButton.setTitleColor(UIColor.white, for: .normal)
+//        foundButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
+//        foundButton.layer.cornerRadius = 16
+//
+//        view.addSubview(foundButton)
+//        foundButton.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            foundButton.topAnchor.constraint(equalTo: createRequestButton.bottomAnchor, constant:20),
+//            foundButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+//            foundButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+//            foundButton.heightAnchor.constraint(equalToConstant: 56),
+//        ])
+//        
+//        foundButton.addTarget(self, action: #selector(foundTapped), for: .touchUpInside)
+//    }
     
     @objc func foundTapped() {
         let FoundVC = FoundVC(name: "String", date: Date(), location: "String", desc: "String")
@@ -273,56 +235,56 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     }
   
 }
-
-// MARK: - UICollectionView DataSource
-extension HomeVC: UICollectionViewDataSource {
-    
-    // MainCollectionView
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.createPostCollectionView {
-            return 1
-        }
-        return posts.count
-        // return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.createPostCollectionView{
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-            return cell 
-        }
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
-
-        cell.configure(post: self.posts[indexPath.row])
-        return cell
-        
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-//        return cell
-        }
-    }
-
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension HomeVC: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == self.createPostCollectionView {
-            let widthSize = collectionView.frame.width
-            let heightSize = collectionView.frame.height
-            return CGSize(width: widthSize, height: heightSize)
-        }
-        let size = collectionView.frame.width / 2 - 14
-        return CGSize(width: size, height: size)
-    }
-    
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//
+//// MARK: - UICollectionView DataSource
+//extension HomeVC: UICollectionViewDataSource {
+//    
+//    // MainCollectionView
+//    
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        if collectionView == self.createPostCollectionView {
+//            return 1
+//        }
+//        return posts.count
+//        // return 1
 //    }
-    
-    
-        
-       
-}
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        if collectionView == self.createPostCollectionView{
+//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
+//            return cell 
+//        }
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
+//
+//        cell.configure(post: self.posts[indexPath.row])
+//        return cell
+//        
+////        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
+////        return cell
+//        }
+//    }
+
+//
+//// MARK: - UICollectionViewDelegateFlowLayout
+//extension HomeVC: UICollectionViewDelegateFlowLayout {
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        if collectionView == self.createPostCollectionView {
+//            let widthSize = collectionView.frame.width
+//            let heightSize = collectionView.frame.height
+//            return CGSize(width: widthSize, height: heightSize)
+//        }
+//        let size = collectionView.frame.width / 2 - 14
+//        return CGSize(width: size, height: size)
+//    }
+//    
+////    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+////    }
+//    
+//    
+//        
+//       
+//}
 
 
 extension HomeVC: UITableViewDataSource {
@@ -332,11 +294,13 @@ extension HomeVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("hihi")
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "LeaderboardCell", for: indexPath) as? LeaderboardCell else {
                 return UITableViewCell()
             }
             
             let user = users[indexPath.row]
+            print(user.name)
             
             // Configure cell
             cell.rankLabel.text = "\(indexPath.row + 1)"

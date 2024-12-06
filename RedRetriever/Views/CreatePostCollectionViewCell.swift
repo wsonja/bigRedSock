@@ -19,7 +19,7 @@ class CreatePostCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor.a4.offWhite
+        backgroundColor = UIColor.white
         layer.cornerRadius = 16
         
         setupPostButton()

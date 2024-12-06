@@ -49,7 +49,7 @@ class CreateRequestVC: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
         self.title = "Item Request"
-        view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        view.backgroundColor = UIColor.white
         setupUI()
         let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left", withConfiguration: config), style: .plain, target: self, action: #selector(backButtonTapped))
@@ -90,27 +90,27 @@ class CreateRequestVC: UIViewController {
         nameTextField.placeholder = "Enter your name"
         nameTextField.borderStyle = .roundedRect
         nameTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        nameTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        nameTextField.backgroundColor = UIColor.white
         
         emailTextField.placeholder = "Enter your email"
         emailTextField.borderStyle = .roundedRect
         emailTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        emailTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        emailTextField.backgroundColor = UIColor.white
         
         phoneTextField.placeholder = "Enter your phone number"
         phoneTextField.borderStyle = .roundedRect
         phoneTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        phoneTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        phoneTextField.backgroundColor = UIColor.white
         
         locationTextField.placeholder = "Enter your location"
         locationTextField.borderStyle = .roundedRect
         locationTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        locationTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        locationTextField.backgroundColor = UIColor.white
         
         descriptionTextField.placeholder = "Enter description"
         descriptionTextField.borderStyle = .roundedRect
         descriptionTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        descriptionTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        descriptionTextField.backgroundColor = UIColor.white
         
         // Configure date picker
         dateField.datePickerMode = .date
@@ -178,7 +178,7 @@ class CreateRequestVC: UIViewController {
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 26),
             descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
-            descriptionTextField.heightAnchor.constraint(equalToConstant: 250),
+            descriptionTextField.heightAnchor.constraint(equalToConstant: 200),
             descriptionTextField.widthAnchor.constraint(equalToConstant: 335),
             descriptionTextField.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             descriptionTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
@@ -189,7 +189,7 @@ class CreateRequestVC: UIViewController {
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(submitButton)
         NSLayoutConstraint.activate([
-            submitButton.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 40),
+            submitButton.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 30),
             submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 200),
             submitButton.heightAnchor.constraint(equalToConstant: 50),

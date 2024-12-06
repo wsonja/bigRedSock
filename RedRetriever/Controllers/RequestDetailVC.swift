@@ -46,7 +46,7 @@ class RequestDetailVC: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
         self.title = "Item Found"
-        view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        view.backgroundColor = UIColor.white
         setupUI()
         configure(with: posts[0])
         

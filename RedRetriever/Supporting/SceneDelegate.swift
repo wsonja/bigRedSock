@@ -20,19 +20,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Check user login state
         let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
-        let initialViewController: UIViewController
+//        let initialViewController: UIViewController
 
         if isUserLoggedIn {
             // User is logged in, show HomeVC
 //            initialViewController = HomeVC()
-            initialViewController = MainTabBarController()
+            window.rootViewController = MainTabBarController()
         } else {
             // User is not logged in, show LoginVC
-            initialViewController = LoginVC()
-        }
+            window.rootViewController = UINavigationController(rootViewController: LoginVC())
 
-        // Set the root view controller
-        window.rootViewController = UINavigationController(rootViewController: initialViewController)
+        }
 
         self.window = window
         window.makeKeyAndVisible()

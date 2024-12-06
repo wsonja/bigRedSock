@@ -28,7 +28,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
-        view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        view.backgroundColor = UIColor.white
 
         
         self.tabBarItem.title = "Requests"
@@ -131,7 +131,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         requestsCollectionView.register(RequestsCollectionViewCell.self, forCellWithReuseIdentifier: RequestsCollectionViewCell.reuse)
         requestsCollectionView.delegate = self
         requestsCollectionView.dataSource = self
-        requestsCollectionView.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        requestsCollectionView.backgroundColor = UIColor.white
         
         requestsCollectionView.alwaysBounceVertical = true
         

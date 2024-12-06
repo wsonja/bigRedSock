@@ -44,7 +44,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
         self.title = "Item Found"
-        view.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        view.backgroundColor = UIColor.white
         setupUI()
         
         
@@ -55,6 +55,8 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         navigationItem.backButtonTitle = ""
 
     }
+    
+
     
     // MARK: - Set Up Views
     private func setupUI() {
@@ -79,17 +81,17 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         nameTextField.placeholder = "Enter your name"
         nameTextField.borderStyle = .roundedRect
         nameTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        nameTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        nameTextField.backgroundColor = UIColor.white
        
         locationTextField.placeholder = "Enter your location"
         locationTextField.borderStyle = .roundedRect
         locationTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        locationTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        locationTextField.backgroundColor = UIColor.white
         
         descriptionTextField.placeholder = "Enter description"
         descriptionTextField.borderStyle = .roundedRect
         descriptionTextField.font = .systemFont(ofSize: 16, weight: .medium)
-        descriptionTextField.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        descriptionTextField.backgroundColor = UIColor.white
         
         // Configure date picker
         dateField.datePickerMode = .date
@@ -107,7 +109,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
     
         
         uploadButton.setTitle("Upload", for: .normal)
-        uploadButton.backgroundColor = UIColor(red: 246/255.0, green: 244/255.0, blue: 241/255.0, alpha: 1)
+        uploadButton.backgroundColor = UIColor.white
         uploadButton.layer.cornerRadius = 8
         uploadButton.layer.borderWidth = 2
         uploadButton.layer.borderColor = UIColor.a4.ruby.cgColor
@@ -167,7 +169,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 26),
             descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
-            descriptionTextField.heightAnchor.constraint(equalToConstant: 250),
+            descriptionTextField.heightAnchor.constraint(equalToConstant: 200),
             descriptionTextField.widthAnchor.constraint(equalToConstant: 335),
             descriptionTextField.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             descriptionTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
@@ -196,7 +198,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(submitButton)
         NSLayoutConstraint.activate([
-            submitButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -120),
+            submitButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -180),
             submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 200),
             submitButton.heightAnchor.constraint(equalToConstant: 50),
@@ -266,7 +268,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         // UIImagePickerControllerDelegate method: When an image is selected
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true, completion: nil)
-
+            
             // Get the selected image
             if let editedImage = info[.editedImage] as? UIImage {
 //                imageView.image = editedImage
