@@ -325,7 +325,7 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
             return CGSize(width: widthSize, height: heightSize)
         }
         let size = collectionView.frame.width / 2 - 14
-        return CGSize(width: size, height: size)
+        return CGSize(width: size, height: size+5)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

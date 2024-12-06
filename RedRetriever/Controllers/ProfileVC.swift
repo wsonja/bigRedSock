@@ -84,7 +84,7 @@ class ProfileVC: UIViewController {
             emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
-        pointsLabel.text = "\(UserManager.shared.points ?? 0)"
+        pointsLabel.text = "Points: \(UserManager.shared.points ?? 0)"
         pointsLabel.font = .systemFont(ofSize: 16, weight:.medium)
         pointsLabel.textColor = UIColor.black
         

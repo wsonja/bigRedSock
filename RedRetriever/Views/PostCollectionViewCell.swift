@@ -31,8 +31,8 @@ class PostCollectionViewCell: UICollectionViewCell {
         setupPostImageView()
         setupPostTitleLabel()
 //        setupPostDescriptionLabel()
-//        setupPostLocationLabel()
-//        setupPostTimeLabel()
+        setupPostLocationLabel()
+        setupPostTimeLabel()
     }
     
     required init?(coder: NSCoder) {
@@ -46,43 +46,90 @@ class PostCollectionViewCell: UICollectionViewCell {
         postTitleLabel.text = post.title
         postDescriptionLabel.text = post.description
         postLocationLabel.text = post.location
-        postTimeLabel.text = post.time
+        
+        
+        
+        postTimeLabel.text = "• \(post.date.convertToAgo())"
     }
     
 //MARK: - setup views
     private func setupPostImageView(){
 
-        postImageView.contentMode = .scaleAspectFit
-        // test the corner radius
-        // postImageView.layer.cornerRadius = 15.0
-        postImageView.clipsToBounds = true
+            postImageView.contentMode = .scaleAspectFit
+            // test the corner radius
+            // postImageView.layer.cornerRadius = 15.0
+            postImageView.clipsToBounds = true
 
-        //add to subview
-        contentView.addSubview(postImageView)
-        postImageView.translatesAutoresizingMaskIntoConstraints = false
+            //add to subview
+            contentView.addSubview(postImageView)
+            postImageView.translatesAutoresizingMaskIntoConstraints = false
 
-        //constraint
-        NSLayoutConstraint.activate([
-            postImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            postImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            postImageView.heightAnchor.constraint(equalToConstant: 156),
-            postImageView.widthAnchor.constraint(equalToConstant: 150)
-        ])
-    }
-    
-    private func setupPostTitleLabel() {
-        postTitleLabel.textColor = .label
-        postTitleLabel.font = .systemFont(ofSize: 16, weight: .medium)
-//        postTitleLabel.lineBreakMode = .byWordWrapping
-//        postTitleLabel.numberOfLines = 2
+            //constraint
+            NSLayoutConstraint.activate([
+                postImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                postImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                postImageView.heightAnchor.constraint(equalToConstant: 156),
+                postImageView.widthAnchor.constraint(equalToConstant: 150)
+            ])
+        }
+        
+        private func setupPostTitleLabel() {
+            postTitleLabel.textColor = .label
+            postTitleLabel.font = .systemFont(ofSize: 16, weight: .medium)
+    //        postTitleLabel.lineBreakMode = .byWordWrapping
+    //        postTitleLabel.numberOfLines = 2
 
-        contentView.addSubview(postTitleLabel)
-        postTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(postTitleLabel)
+            postTitleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([
-            postTitleLabel.centerXAnchor.constraint(equalTo: postImageView.centerXAnchor, constant: 0),
-            postTitleLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
-        ])
-    }
+            NSLayoutConstraint.activate([
+                postTitleLabel.leftAnchor.constraint(equalTo: postImageView.leftAnchor, constant: 0),
+                postTitleLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
+            ])
+        }
+    private func setupPostLocationLabel() {
+            postLocationLabel.textColor = .label
+            postLocationLabel.font = .systemFont(ofSize: 12, weight: .light)
+    //        postTitleLabel.lineBreakMode = .byWordWrapping
+    //        postTitleLabel.numberOfLines = 2
+
+            contentView.addSubview(postLocationLabel)
+            postLocationLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                postLocationLabel.leftAnchor.constraint(equalTo: postImageView.leftAnchor, constant: 0),
+                postLocationLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor, constant: 2),
+            ])
+        }
+        
+        private func setupPostTimeLabel() {
+            postTimeLabel.text = "• 5 days"
+            postTimeLabel.textColor = .label
+            postTimeLabel.font = .systemFont(ofSize: 12, weight: .light)
+    //        postTitleLabel.lineBreakMode = .byWordWrapping
+    //        postTitleLabel.numberOfLines = 2
+
+            contentView.addSubview(postTimeLabel)
+            postTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                postTimeLabel.leftAnchor.constraint(equalTo: postLocationLabel.rightAnchor, constant: 2),
+                postTimeLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor, constant: 2),
+            ])
+        }
 }
 
+extension Date {
+
+    /**
+     Returns a string representation of the amount of time from this date to now
+
+     For example, if today is July 1 7:00 PM and this date was July 1 6:50 PM, this function returns `"10 min. ago"`
+    */
+    func convertToAgo() -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .abbreviated
+        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+
+}
