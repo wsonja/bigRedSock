@@ -23,6 +23,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Error restoring sign-in: \(error.localizedDescription)")
             } else {
                 print("User restored: \(String(describing: user?.profile?.name))")
+                let emailAddress = user?.profile?.email
+                let fullName = user?.profile?.name
+                let givenName = user?.profile?.givenName
+                let familyName = user?.profile?.familyName
+                let profilePicUrl = user?.profile?.imageURL(withDimension: 320)
+                UserManager.shared.email = emailAddress
+                UserManager.shared.profileName = fullName
+                UserManager.shared.firstName = givenName
+                UserManager.shared.lastName = familyName
+                UserManager.shared.profilePicURL = profilePicUrl
             }
         }
         return true

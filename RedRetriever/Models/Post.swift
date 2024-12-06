@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post {
+struct Post: Equatable{
     let id: String
     let description: String
     let image: String
@@ -18,6 +18,10 @@ struct Post {
     let status: String
     let email: String
     let phone: String
+    
+    static func ==(lhs: Post, rhs: Post) -> Bool {
+            return lhs.id == rhs.id // or any other property you want to compare
+        }
 }
 
 extension Post {
@@ -66,7 +70,7 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found",
+            status: "found",
             email: "sonja.hinting@gmail.com",
             phone: "1234567890"
         ),

@@ -196,8 +196,8 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         NSLayoutConstraint.activate([
             // Header view constraints (top position)
             foundHeaderView.topAnchor.constraint(equalTo: requestsCollectionView.bottomAnchor, constant: 40),
-            foundHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            foundHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            foundHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            foundHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17),
             foundHeaderView.heightAnchor.constraint(equalToConstant: 80),
             
             
@@ -277,23 +277,49 @@ extension RequestsVC: UICollectionViewDataSource {
     // MainCollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        let filteredPosts: [Post]
         if collectionView == self.requestsCollectionView {
-            return posts.count
+            filteredPosts = posts.filter { $0.status != "found" }
+            print("Count: \(filteredPosts.count)")
+            return filteredPosts.count
+        } else if collectionView == self.foundCollectionView {
+            filteredPosts = posts.filter { $0.status == "found" }
+            print("Count: \(filteredPosts.count)")
+            return filteredPosts.count
+            
         }
+        print("Count: \(posts.count)")
         return posts.count
         // return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.requestsCollectionView{
-            print("hihihi")
-        } else if collectionView == self.foundCollectionView{
-            print("found")
-        }
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else { return UICollectionViewCell() }
+        print("Row: \(indexPath.row)")
+        let filteredPosts: [Post]
+            
+            if collectionView == self.requestsCollectionView {
+                // Filter out posts with status "Found"
+                filteredPosts = posts.filter { $0.status != "found" }
+            } else if collectionView == self.foundCollectionView {
+                // Filter only posts with status "Found"
+                filteredPosts = posts.filter { $0.status == "found" }
+            } else {
+                // Return empty cell if it's an unknown collection view
+                return UICollectionViewCell()
+            }
         
-        cell.configure(post: self.posts[indexPath.row])
-        return cell
+        let post = filteredPosts[indexPath.row]
+            
+            // Dequeue and configure the cell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            
+            // Configure the cell with the filtered post
+            cell.configure(post: post)
+            
+            return cell
         
     }
 }
@@ -310,7 +336,7 @@ extension RequestsVC: UICollectionViewDelegateFlowLayout {
 //            return CGSize(width: widthSize, height: 30)
 //        }
         let size = collectionView.frame.width
-        return CGSize(width: size, height: 30)
+        return CGSize(width: size, height: 33)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -327,6 +353,19 @@ extension RequestsVC: UICollectionViewDelegateFlowLayout {
                 let requestDetailVC = RequestDetailVC()
                 requestDetailVC.post = selectedPost // Pass the post object or index if needed
                 navigationController?.pushViewController(requestDetailVC, animated: true)
+            } else if selectedPost.status == "not found" {
+                let alertController = UIAlertController(title: "Sorry :(", message: "Item still not found.", preferredStyle: .alert)
+                    
+                // Add an "OK" action
+                let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                    // Optional: Code to execute after the alert is dismissed
+                    print("User dismissed the alert")
+                }
+                alertController.addAction(okAction)
+                
+                // Present the alert
+                self.present(alertController, animated: true, completion: nil)
+
             }
         }
     

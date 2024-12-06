@@ -43,7 +43,7 @@ class LoginVC: UIViewController {
     
     
     private func setupUI() {
-        profileImageView.sd_setImage(with: URL(string: "https://i.scdn.co/image/ab6761610000e5eb10e83b0ca558533d0f3c376c"), placeholderImage: UIImage(systemName: "photo"))
+        profileImageView.image = UIImage(named: "found")
         profileImageView.layer.cornerRadius = 64
         profileImageView.layer.masksToBounds = true
         view.addSubview(profileImageView)
@@ -56,7 +56,7 @@ class LoginVC: UIViewController {
             profileImageView.widthAnchor.constraint(equalToConstant: 128)
         ])
         
-        nameLabel.text = "sonja"
+        nameLabel.text = "Red Retrievers"
         nameLabel.font = .systemFont(ofSize: 32, weight:.semibold)
         nameLabel.textColor = UIColor.black
         
@@ -102,16 +102,11 @@ class LoginVC: UIViewController {
         UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
         UserDefaults.standard.synchronize()
 
-        // Transition to HomeVC
-        let homeVC = HomeVC()
-        let navController = UINavigationController(rootViewController: homeVC)
-        if let window = UIApplication.shared.windows.first {
-            window.rootViewController = navController
-            window.makeKeyAndVisible()
-        }
-    
-        let HomeVC = HomeVC()
-        navigationController?.pushViewController(HomeVC, animated: true)
+
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                let mainTabBarController = MainTabBarController()
+                sceneDelegate.window?.rootViewController = mainTabBarController
+            }
     }
    
 

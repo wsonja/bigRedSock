@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import GoogleSignIn
 
 class ProfileVC: UIViewController {
  
@@ -23,6 +24,8 @@ class ProfileVC: UIViewController {
     private var requestsCollectionView: UICollectionView!
     private var posts = Post.dummyData
     
+    private let logOutButton = UIButton()
+    
     
     // MARK: - Properties (data)
     
@@ -36,6 +39,7 @@ class ProfileVC: UIViewController {
         self.tabBarItem.title = "Profile"
         setupUI()
         setuprequestsCollectionView()
+        setupLogOutButton()
 
     }
     
@@ -43,7 +47,7 @@ class ProfileVC: UIViewController {
     
     
     private func setupUI() {
-        profileImageView.sd_setImage(with: URL(string: "https://i.scdn.co/image/ab6761610000e5eb10e83b0ca558533d0f3c376c"), placeholderImage: UIImage(systemName: "photo"))
+        profileImageView.sd_setImage(with: UserManager.shared.profilePicURL, placeholderImage: UIImage(systemName: "photo"))
         profileImageView.layer.cornerRadius = 64
         profileImageView.layer.masksToBounds = true
         view.addSubview(profileImageView)
@@ -56,7 +60,7 @@ class ProfileVC: UIViewController {
             profileImageView.widthAnchor.constraint(equalToConstant: 128)
         ])
         
-        nameLabel.text = "sonja"
+        nameLabel.text = UserManager.shared.profileName
         nameLabel.font = .systemFont(ofSize: 32, weight:.semibold)
         nameLabel.textColor = UIColor.black
         
@@ -68,7 +72,7 @@ class ProfileVC: UIViewController {
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
-        emailLabel.text = "sonja@gmail.com"
+        emailLabel.text = UserManager.shared.email
         emailLabel.font = .systemFont(ofSize: 16, weight:.medium)
         emailLabel.textColor = UIColor.black
         
@@ -80,7 +84,7 @@ class ProfileVC: UIViewController {
             emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
-        pointsLabel.text = "12"
+        pointsLabel.text = "\(UserManager.shared.points ?? 0)"
         pointsLabel.font = .systemFont(ofSize: 16, weight:.medium)
         pointsLabel.textColor = UIColor.black
         
@@ -144,6 +148,41 @@ class ProfileVC: UIViewController {
             ])
     }
     
+    private func setupLogOutButton(){
+        logOutButton.setTitle("Logout", for: .normal)
+        logOutButton.backgroundColor = UIColor.a4.ruby
+        logOutButton.layer.cornerRadius = 8
+        logOutButton.setTitleColor(.white, for: .normal)
+        
+        logOutButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(logOutButton)
+        NSLayoutConstraint.activate([
+            logOutButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
+            logOutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logOutButton.widthAnchor.constraint(equalToConstant: 130),
+            logOutButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
+        
+        
+        logOutButton.addTarget(self, action: #selector(signOut), for: .touchUpInside)
+        
+    }
+    
+    @IBAction func signOut(sender: Any) {
+        print("signout")
+        GIDSignIn.sharedInstance.signOut()
+        let loginVC = LoginVC()
+        let navController = UINavigationController(rootViewController: loginVC)
+        
+        // If you're using a window (UIApplication.shared.delegate), you can set the root view controller like this:
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.window?.rootViewController = navController
+        }
+
+        // For simple navigation (in case you're not using AppDelegate's window directly):
+        self.present(navController, animated: true, completion: nil)
+        
+    }
   
 
     init() {

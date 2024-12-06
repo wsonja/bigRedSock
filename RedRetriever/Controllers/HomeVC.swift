@@ -30,6 +30,9 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     private let matchedButton = UIButton()
     private let itemNumLabel = UILabel()
     
+    private let leaderBoardLabel = UILabel()
+    private let matchesLabel = UILabel()
+    
     // MARK: - Properties (data)
     private var posts = Post.dummyData
     private let users = User.dummyData
@@ -48,12 +51,16 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
 //        setupcreateRequestButton()
 //        setupfoundButton()
         setupImageButtons()
+        
+        setupLeaderboardLabel()
         setupLeaderboard()
         
-        setupRequestDetailButton()
-        setupMatchedButton()
+//        setupRequestDetailButton()
+//        setupMatchedButton()
+        
         leaderboardTableView.reloadData()
         
+        setupMatchesLabel()
         setupPostCollectionView()
         
         
@@ -61,6 +68,21 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     }
     
     // MARK: - Set Up Views
+    
+    private func setupLeaderboardLabel(){
+        leaderBoardLabel.text = "Leaderboard"
+        leaderBoardLabel.font = .systemFont(ofSize: 24, weight:.semibold)
+        leaderBoardLabel.textColor = UIColor.black
+        
+        view.addSubview(leaderBoardLabel)
+        leaderBoardLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            leaderBoardLabel.topAnchor.constraint(equalTo: foundButton.bottomAnchor, constant: 30),
+            leaderBoardLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
+            leaderBoardLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
+        ])
+    }
     
     private func setupLeaderboard(){
         
@@ -73,10 +95,10 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         
         leaderboardTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            leaderboardTableView.topAnchor.constraint(equalTo: foundButton.bottomAnchor, constant: 30),
+            leaderboardTableView.topAnchor.constraint(equalTo: leaderBoardLabel.bottomAnchor, constant: 10),
             leaderboardTableView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
             leaderboardTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
-            leaderboardTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
+            leaderboardTableView.heightAnchor.constraint(equalToConstant: 100)
             
         ])
     }
@@ -91,6 +113,21 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
             titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             titleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             titleView.heightAnchor.constraint(equalToConstant: 10) // Adjust the height as needed
+        ])
+    }
+    
+    private func setupMatchesLabel(){
+        matchesLabel.text = "Matches"
+        matchesLabel.font = .systemFont(ofSize: 24, weight:.semibold)
+        matchesLabel.textColor = UIColor.black
+        
+        view.addSubview(matchesLabel)
+        matchesLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            matchesLabel.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 30),
+            matchesLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
+            matchesLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
         ])
     }
     
@@ -151,34 +188,12 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
         foundButton.addTarget(self, action: #selector(foundTapped), for: .touchUpInside)
     }
-    
-   
-    
-//    private func setupcreateRequestButton() {
-//            createRequestButton.setTitle("Create Request", for: .normal)
-//            createRequestButton.setTitleColor(UIColor.white, for: .normal)
-//            createRequestButton.backgroundColor = UIColor(red: 0.79, green: 0.26, blue: 0.22, alpha: 1.00)
-//            createRequestButton.layer.cornerRadius = 16
-//
-//            view.addSubview(createRequestButton)
-//            createRequestButton.translatesAutoresizingMaskIntoConstraints = false
-//            
-//            NSLayoutConstraint.activate([
-//                createRequestButton.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 20),
-//                createRequestButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-//                createRequestButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-//                createRequestButton.heightAnchor.constraint(equalToConstant: 56),
-//            ])
-//            
-//            createRequestButton.addTarget(self, action: #selector(createRequestTapped), for: .touchUpInside)
-//        }
         
-        
-        @objc func createRequestTapped() {
-            let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
-            CreateRequestVC.delegate = self
-            navigationController?.pushViewController(CreateRequestVC, animated: true)
-        }
+    @objc func createRequestTapped() {
+        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
+        CreateRequestVC.delegate = self
+        navigationController?.pushViewController(CreateRequestVC, animated: true)
+    }
         
     
     
@@ -264,7 +279,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
             NSLayoutConstraint.activate([
                 postCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
                 postCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
-                postCollectionView.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 10),
+                postCollectionView.topAnchor.constraint(equalTo: matchesLabel.bottomAnchor, constant: 10),
                 postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
             ])
         }
