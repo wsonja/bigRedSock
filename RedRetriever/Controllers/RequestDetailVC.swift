@@ -46,7 +46,7 @@ class RequestDetailVC: UIViewController {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
-        self.title = "Item Found"
+        self.title = "Item Request Details"
         view.backgroundColor = UIColor.white
         setupUI()
         if let post = post {

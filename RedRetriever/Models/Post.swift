@@ -42,7 +42,7 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "found",
+            status: "pending",
             email: "sonja.hinting@gmail.com",
             phone: "1234567890"
         ),

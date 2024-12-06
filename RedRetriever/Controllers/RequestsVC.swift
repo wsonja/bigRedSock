@@ -322,7 +322,7 @@ extension RequestsVC: UICollectionViewDelegateFlowLayout {
                 let matchedVC = MatchedVC()
                 matchedVC.post = selectedPost // Pass the post object or index if needed
                 navigationController?.pushViewController(matchedVC, animated: true)
-            } else if selectedPost.status == "found" {
+            } else if selectedPost.status == "pending" {
                 // If the status is "Found", navigate to RequestDetailsVC
                 let requestDetailVC = RequestDetailVC()
                 requestDetailVC.post = selectedPost // Pass the post object or index if needed

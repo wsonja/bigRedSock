@@ -54,6 +54,8 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         setupMatchedButton()
         leaderboardTableView.reloadData()
         
+        setupPostCollectionView()
+        
         
     
     }
@@ -233,58 +235,96 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         FoundVC.delegate = self
         navigationController?.pushViewController(FoundVC, animated: true)
     }
+    
+    private func setupPostCollectionView() {
+            print("setupPostCollectionView")
+            let padding = 20
+            let layout = UICollectionViewFlowLayout()
+            
+            layout.scrollDirection = .vertical
+            layout.minimumLineSpacing = 40
+            layout.minimumInteritemSpacing = 0
+            
+            // Initialize CollectionView with the layout
+            postCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+            postCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.reuse)
+            postCollectionView.delegate = self
+            postCollectionView.dataSource = self
+            
+    //        collectionView.backgroundColor = .red
+            
+            postCollectionView.alwaysBounceVertical = true
+            
+            view.addSubview(postCollectionView)
+            
+            //postCollectionView.refreshControl = refreshControl
+            
+            postCollectionView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                postCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
+                postCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
+                postCollectionView.topAnchor.constraint(equalTo: leaderboardTableView.bottomAnchor, constant: 10),
+                postCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+            ])
+        }
   
 }
-//
-//// MARK: - UICollectionView DataSource
-//extension HomeVC: UICollectionViewDataSource {
-//    
-//    // MainCollectionView
-//    
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if collectionView == self.createPostCollectionView {
-//            return 1
-//        }
-//        return posts.count
-//        // return 1
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        if collectionView == self.createPostCollectionView{
-//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-//            return cell 
-//        }
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
-//
-//        cell.configure(post: self.posts[indexPath.row])
+
+// MARK: - UICollectionView DataSource
+extension HomeVC: UICollectionViewDataSource {
+    
+    // MainCollectionView
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView == self.createPostCollectionView {
+            return 1
+        }
+        return posts.count
+        // return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == self.createPostCollectionView{
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
+            return cell 
+        }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
+
+        cell.configure(post: self.posts[indexPath.row])
+        return cell
+        
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
 //        return cell
-//        
-////        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-////        return cell
-//        }
-//    }
+        }
+    }
 
 //
-//// MARK: - UICollectionViewDelegateFlowLayout
-//extension HomeVC: UICollectionViewDelegateFlowLayout {
-//    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        if collectionView == self.createPostCollectionView {
-//            let widthSize = collectionView.frame.width
-//            let heightSize = collectionView.frame.height
-//            return CGSize(width: widthSize, height: heightSize)
-//        }
-//        let size = collectionView.frame.width / 2 - 14
-//        return CGSize(width: size, height: size)
-//    }
-//    
-////    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-////    }
-//    
-//    
-//        
-//       
-//}
+// MARK: - UICollectionViewDelegateFlowLayout
+extension HomeVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == self.createPostCollectionView {
+            let widthSize = collectionView.frame.width
+            let heightSize = collectionView.frame.height
+            return CGSize(width: widthSize, height: heightSize)
+        }
+        let size = collectionView.frame.width / 2 - 14
+        return CGSize(width: size, height: size)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            if collectionView == self.postCollectionView {
+                let viewItemVC = MatchedVC()
+                viewItemVC.configure(post: self.posts[indexPath.row])
+                navigationController?.pushViewController(viewItemVC, animated: true)
+                collectionView.reloadData()
+            }
+        }
+    
+        
+       
+}
 
 
 extension HomeVC: UITableViewDataSource {
@@ -319,6 +359,8 @@ extension HomeVC: UITableViewDelegate{
         let user = users[indexPath.row]
         print("Selected: \(user.name) with \(user.points) points")
     }
+    
+    
     
 }
 
