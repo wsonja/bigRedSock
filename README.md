@@ -1,4 +1,4 @@
-# Red Retriever ![IMG_5655](https://github.com/user-attachments/assets/9726bf9b-a03d-452c-9b74-a6c287d24f1e)
+# Red Retriever <img src="https://github.com/user-attachments/assets/9726bf9b-a03d-452c-9b74-a6c287d24f1e" alt="Alt text" width="50" height="50">
 A lost and found social media app to help Cornellians find their lost items around campus. 
 
 ## Description 
