@@ -31,6 +31,20 @@ class HomeVC: UIViewController {
         setupPostCollectionView()
     }
     
+    // MARK: - Networking
+    @objc private func fetchAllPosts() {
+        NetworkManager.shared.fetchAllPosts { [weak self] posts in
+            guard let self = self else { return }
+            self.posts = posts
+
+            // Perform UI update on main queue
+            DispatchQueue.main.async {
+                self.postCollectionView.reloadData()
+                self.refreshControl.endRefreshing() // End refresh control
+            }
+        }
+    }
+    
     // MARK: - Set Up Views
     private func setupCreatePostCollectionView() {
         let padding = 20
@@ -69,7 +83,7 @@ class HomeVC: UIViewController {
         let layout = UICollectionViewFlowLayout()
         
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 40
+        layout.minimumLineSpacing = 55
         layout.minimumInteritemSpacing = 0
         
         // Initialize CollectionView with the layout

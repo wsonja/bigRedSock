@@ -31,8 +31,8 @@ class PostCollectionViewCell: UICollectionViewCell {
         setupPostImageView()
         setupPostTitleLabel()
 //        setupPostDescriptionLabel()
-//        setupPostLocationLabel()
-//        setupPostTimeLabel()
+        setupPostLocationLabel()
+        setupPostTimeLabel()
     }
     
     required init?(coder: NSCoder) {
@@ -46,7 +46,7 @@ class PostCollectionViewCell: UICollectionViewCell {
         postTitleLabel.text = post.title
         postDescriptionLabel.text = post.description
         postLocationLabel.text = post.location
-        postTimeLabel.text = post.time
+//        postTimeLabel.text = post.time
     }
     
 //MARK: - setup views
@@ -80,8 +80,39 @@ class PostCollectionViewCell: UICollectionViewCell {
         postTitleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            postTitleLabel.centerXAnchor.constraint(equalTo: postImageView.centerXAnchor, constant: 0),
+            postTitleLabel.leftAnchor.constraint(equalTo: postImageView.leftAnchor, constant: 0),
             postTitleLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
+        ])
+    }
+    
+    private func setupPostLocationLabel() {
+        postLocationLabel.textColor = .label
+        postLocationLabel.font = .systemFont(ofSize: 12, weight: .light)
+//        postTitleLabel.lineBreakMode = .byWordWrapping
+//        postTitleLabel.numberOfLines = 2
+
+        contentView.addSubview(postLocationLabel)
+        postLocationLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            postLocationLabel.leftAnchor.constraint(equalTo: postImageView.leftAnchor, constant: 0),
+            postLocationLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor, constant: 2),
+        ])
+    }
+    
+    private func setupPostTimeLabel() {
+        postTimeLabel.text = "• 5 days"
+        postTimeLabel.textColor = .label
+        postTimeLabel.font = .systemFont(ofSize: 12, weight: .light)
+//        postTitleLabel.lineBreakMode = .byWordWrapping
+//        postTitleLabel.numberOfLines = 2
+
+        contentView.addSubview(postTimeLabel)
+        postTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            postTimeLabel.leftAnchor.constraint(equalTo: postLocationLabel.rightAnchor, constant: 2),
+            postTimeLabel.topAnchor.constraint(equalTo: postTitleLabel.bottomAnchor, constant: 2),
         ])
     }
 }

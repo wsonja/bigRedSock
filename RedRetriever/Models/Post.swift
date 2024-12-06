@@ -16,7 +16,7 @@ struct Post {
     let time: String
 }
 
-extension Post {
+extension Post: Codable {
     static let dummyData = [
         Post(
             id: "801343ed-fc1b-4ed0-a226-2381f0ec4186",
