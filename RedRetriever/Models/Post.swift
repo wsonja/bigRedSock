@@ -42,7 +42,7 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found",
+            status: "found",
             email: "sonja.hinting@gmail.com",
             phone: "1234567890"
         ),
@@ -54,7 +54,7 @@ extension Post {
             location: "Gates Hall",
             time: "12",
             date: Date(timeIntervalSince1970: 1713585103),
-            status: "not found",
+            status: "matched",
             email: "sonja.hinting@gmail.com",
             phone: "1234567890"
         ),

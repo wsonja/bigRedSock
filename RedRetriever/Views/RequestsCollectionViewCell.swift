@@ -49,27 +49,33 @@ class RequestsCollectionViewCell: UICollectionViewCell {
 //MARK: - setup views
     private func setupUI(){
 
-        requestStatusLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        requestStatusLabel.font = .systemFont(ofSize: 15, weight: .medium)
         requestStatusLabel.textColor = .darkGray
         
-        requestDateLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        requestDateLabel.font = .systemFont(ofSize: 15, weight: .medium)
         requestDateLabel.textColor = .darkGray
         
-        requestDescriptionLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        requestDescriptionLabel.font = .systemFont(ofSize: 15, weight: .medium)
         requestDescriptionLabel.textColor = .darkGray
+        
+        requestStatusLabel.translatesAutoresizingMaskIntoConstraints = false
+        requestDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         // Set up a horizontal stack view to hold the three labels side by side
         let stackView = UIStackView(arrangedSubviews: [requestStatusLabel, requestDateLabel, requestDescriptionLabel])
         stackView.axis = .horizontal
-        stackView.spacing = 16 // Space between labels
+        stackView.spacing = 12 // Space between labels
         stackView.alignment = .center
-        stackView.distribution = .fillEqually
+//        stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(stackView)
         
         // Add constraints to make the stack view fill the content of the cell
         NSLayoutConstraint.activate([
+            requestStatusLabel.widthAnchor.constraint(equalToConstant: 70),
+            requestDateLabel.widthAnchor.constraint(equalToConstant: 90),
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
             stackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),

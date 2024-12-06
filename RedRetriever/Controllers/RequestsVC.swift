@@ -16,6 +16,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
 
     // MARK: - Properties (view)
     private var requestsCollectionView: UICollectionView!
+    private var foundCollectionView: UICollectionView!
     private var headerView: UIView!
     private var foundHeaderView: UIView!
     private let itemNumLabel = UILabel()
@@ -35,6 +36,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         setupRequestHeadings()
         setuprequestsCollectionView()
         setupFoundHeadings()
+        setupFoundCollectionView()
 
     }
     
@@ -84,8 +86,8 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         NSLayoutConstraint.activate([
             // Header view constraints (top position)
             headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17),
             headerView.heightAnchor.constraint(equalToConstant: 70),
             
             //headlabel
@@ -96,22 +98,22 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
             
             
             // Status label constraints
-            statusLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            statusLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant:0),
             statusLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             statusLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
             statusLabel.widthAnchor.constraint(equalToConstant: 90),
             
             // Date label constraints
-            dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor),
+            dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant:10),
             dateLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             dateLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
-            dateLabel.widthAnchor.constraint(equalToConstant: 120),
+            dateLabel.widthAnchor.constraint(equalToConstant: 40),
             
             // Description label constraints
-            descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 65),
             descriptionLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             descriptionLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
         ])
         
         // Add header view to the main view after constraints
@@ -208,24 +210,55 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
             
 
             // Status label constraints
-            statusLabel.leadingAnchor.constraint(equalTo: foundHeaderView.leadingAnchor),
-            statusLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            statusLabel.leadingAnchor.constraint(equalTo: foundHeaderView.leadingAnchor, constant:0),
+            statusLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             statusLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
             statusLabel.widthAnchor.constraint(equalToConstant: 90),
             
             // Date label constraints
-            dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            dateLabel.leadingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant:10),
+            dateLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             dateLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
-            dateLabel.widthAnchor.constraint(equalToConstant: 120),
+            dateLabel.widthAnchor.constraint(equalToConstant: 40),
             
             // Description label constraints
-            descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 8),
+            descriptionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 65),
+            descriptionLabel.topAnchor.constraint(equalTo: headLabel.bottomAnchor, constant: 15),
             descriptionLabel.bottomAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: foundHeaderView.trailingAnchor),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: foundHeaderView.trailingAnchor),
         ])
         
+    }
+    
+    private func setupFoundCollectionView() {
+        let padding = 20
+        let layout = UICollectionViewFlowLayout()
+        
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 0
+        
+        // Initialize CollectionView with the layout
+        foundCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        foundCollectionView.register(RequestsCollectionViewCell.self, forCellWithReuseIdentifier: RequestsCollectionViewCell.reuse)
+        foundCollectionView.delegate = self
+        foundCollectionView.dataSource = self
+        foundCollectionView.backgroundColor = UIColor.white
+        
+        foundCollectionView.alwaysBounceVertical = true
+        
+        view.addSubview(foundCollectionView)
+        
+        // Enable Auto Layout
+        foundCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Set constraints to position the collection view below the header view
+        NSLayoutConstraint.activate([
+            foundCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
+            foundCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
+            foundCollectionView.topAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
+            foundCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(posts.count*35))
+            ])
     }
 
     init() {
@@ -254,16 +287,16 @@ extension RequestsVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.requestsCollectionView{
             print("hihihi")
+        } else if collectionView == self.foundCollectionView{
+            print("found")
         }
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else { return UICollectionViewCell() }
-
+        
         cell.configure(post: self.posts[indexPath.row])
         return cell
         
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: createRequestsCollectionViewCell.reuse, for: indexPath) as? createRequestsCollectionViewCell else { return UICollectionViewCell() }
-//        return cell
-        }
     }
+}
 
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -280,8 +313,24 @@ extension RequestsVC: UICollectionViewDelegateFlowLayout {
         return CGSize(width: size, height: 30)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            let selectedPost = posts[indexPath.row]
+            
+            // Check the status of the selected post
+            if selectedPost.status == "matched" {
+                // If the status is "Matched", navigate to MatchedVC
+                let matchedVC = MatchedVC()
+                matchedVC.post = selectedPost // Pass the post object or index if needed
+                navigationController?.pushViewController(matchedVC, animated: true)
+            } else if selectedPost.status == "found" {
+                // If the status is "Found", navigate to RequestDetailsVC
+                let requestDetailVC = RequestDetailVC()
+                requestDetailVC.post = selectedPost // Pass the post object or index if needed
+                navigationController?.pushViewController(requestDetailVC, animated: true)
+            }
+        }
+    
+
 }
 
 

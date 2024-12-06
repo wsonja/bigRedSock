@@ -23,6 +23,7 @@ class MatchedVC: UIViewController {
 
     
     // MARK: - Properties (data)
+    var post: Post?
     private var posts = Post.dummyData
     
     //MARK: - viewDidLoad
@@ -32,9 +33,14 @@ class MatchedVC: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
         view.backgroundColor = UIColor.white
-        
         setupUI()
-        configure(post: posts[0])
+        if let post = post {
+            configure(post: post)
+        }else{
+            configure(post: posts[0])
+        }
+        
+        
 
     }
     
@@ -98,7 +104,7 @@ class MatchedVC: UIViewController {
         yesButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(yesButton)
         NSLayoutConstraint.activate([
-            yesButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
+            yesButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
             yesButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60),
             yesButton.widthAnchor.constraint(equalToConstant: 130),
             yesButton.heightAnchor.constraint(equalToConstant: 50),
@@ -115,7 +121,7 @@ class MatchedVC: UIViewController {
         noButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(noButton)
         NSLayoutConstraint.activate([
-            noButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
+            noButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
             noButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -60),
             noButton.widthAnchor.constraint(equalToConstant: 130),
             noButton.heightAnchor.constraint(equalToConstant: 50),
@@ -179,6 +185,12 @@ class MatchedVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
         
+    init(post: Post) {
+           self.post = post
+           super.init(nibName: nil, bundle: nil)
+    }
+    
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

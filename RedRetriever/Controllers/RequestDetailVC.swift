@@ -36,6 +36,7 @@ class RequestDetailVC: UIViewController {
     private var location = String()
     private var desc = String()
     let posts = Post.dummyData
+    var post: Post?
     
     weak var delegate: FoundDelegate?
     
@@ -48,7 +49,12 @@ class RequestDetailVC: UIViewController {
         self.title = "Item Found"
         view.backgroundColor = UIColor.white
         setupUI()
-        configure(with: posts[0])
+        if let post = post {
+            configure(with: post)
+        } else{
+            configure(with: posts[0])
+        }
+        
         
         
         let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
@@ -176,6 +182,11 @@ class RequestDetailVC: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(post: Post) {
+           self.post = post
+           super.init(nibName: nil, bundle: nil)
     }
         
     required init?(coder: NSCoder) {

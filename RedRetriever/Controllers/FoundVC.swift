@@ -26,6 +26,8 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
     private let uploadLabel = UILabel()
     private let uploadButton = UIButton(type: .system)
     
+    private let imageView = UIImageView()
+    
     private let submitButton = UIButton()
     
     
@@ -116,6 +118,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         uploadButton.setTitleColor(UIColor.a4.ruby, for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         uploadButton.addTarget(self, action: #selector(selectImage), for: .touchUpInside)
+    
         
         submitButton.setTitle("Submit", for: .normal)
         submitButton.backgroundColor = UIColor.a4.ruby
@@ -141,7 +144,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         
         // Configure the main stack view (vertical stack view)
         mainStackView.axis = .vertical
-        mainStackView.spacing = 26 // Space between each horizontal pair
+        mainStackView.spacing = 20 // Space between each horizontal pair
         mainStackView.alignment = .leading
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -150,7 +153,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         
         // Add constraints for the main stack view
         NSLayoutConstraint.activate([
-            dateStackView.heightAnchor.constraint(equalToConstant: 40),
+            dateStackView.heightAnchor.constraint(equalToConstant: 35),
             mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             mainStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
             mainStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
@@ -178,9 +181,11 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
         
         view.addSubview(uploadLabel)
         view.addSubview(uploadButton)
+        view.addSubview(imageView)
         
         uploadLabel.translatesAutoresizingMaskIntoConstraints = false
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
        
         
@@ -191,6 +196,10 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
             uploadButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
             uploadButton.widthAnchor.constraint(equalToConstant: 100),
             uploadButton.heightAnchor.constraint(equalToConstant: 30),
+            imageView.topAnchor.constraint(equalTo: uploadLabel.bottomAnchor, constant: 10),
+            imageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 50),
+            imageView.widthAnchor.constraint(lessThanOrEqualToConstant: 50)
             
         ])
         
@@ -271,10 +280,14 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
             
             // Get the selected image
             if let editedImage = info[.editedImage] as? UIImage {
-//                imageView.image = editedImage
+                imageView.image = editedImage
+                uploadLabel.text = "Upload success!"
+                uploadButton.isHidden = true
                 uploadImageToServer(image: editedImage)
             } else if let originalImage = info[.originalImage] as? UIImage {
-//                imageView.image = originalImage
+                imageView.image = originalImage
+                uploadLabel.text = "Upload success!"
+                uploadButton.isHidden = true
                 uploadImageToServer(image: originalImage)
             }
         }
