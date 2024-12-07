@@ -34,7 +34,13 @@ These screens show the page users are taken to when they want to make an item re
 
 ### Backend
 - **At least 4 routes (1 must be GET, 1 must be POST, 1 must be DELETE):**
+GET users, GET Specific User, Create User (POST)
+GET requests, GET specific request, Create request (POST), Update request (POST), DELETE Request
+GET items, GET specific item, Create item (POST), DELETE item
+
 - **At least 2 tables in database with a relationship between them:**
+Tables: Users, Request, Item
+ The database consists of three tables: a User table, which stores user information; a Request table, which holds the details of item requests; and an Item table, which contains the information about items that can be requested or found. There is a one-to-many relationship between User and Request, where each user can have multiple requests, and there is a many-to-many relationship between Request and Item, where a request can be linked to multiple items, and an item can appear in multiple requests.
 - **API specification explaining each implemented route:**
 
 
@@ -43,6 +49,7 @@ These screens show the page users are taken to when they want to make an item re
 - **Medium fidelity explorations of multiple flows in Figma:**
 - **High fidelity prototype in Figma:**
 - **UI design kit/design system in Figma:**
+<img src="" alt="UI kit" width="300">
 
 ## The Team
 - Alanna Yang
