@@ -45,7 +45,7 @@ Tables: Users, Request, Item
 
 
 ### Design
-**Design in Figma:** https://www.figma.com/files/team/1432178604689436394/recents-and-sharing?fuid=1432178602671840668
+**Design in Figma:** https://www.figma.com/design/ESTQTcXJHDG98oegfAmgyE/Hack-Challenge?node-id=0-1&t=0ei71U5QRHJbYZeo-1
 - **Low fidelity sketches of design:**
 - **Medium fidelity explorations of multiple flows in Figma:**
 - **High fidelity prototype in Figma:**
