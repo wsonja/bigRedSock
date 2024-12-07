@@ -52,7 +52,6 @@ Tables: Users, Request, Item
 <img src="" alt="UI kit" width="300">
 
 ## The Team
-- Alanna Yang
 - Tina Chen
 - Satria Tjiaman
 - Sonja Wang 
