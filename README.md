@@ -49,7 +49,6 @@ Tables: Users, Request, Item
 - **Medium fidelity explorations of multiple flows in Figma:**
 - **High fidelity prototype in Figma:**
 - **UI design kit/design system in Figma:**
-<img src="" alt="UI kit" width="300">
 
 ## The Team
 - Tina Chen
