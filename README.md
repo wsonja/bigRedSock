@@ -20,7 +20,7 @@ Upon opening the app, users can sign in with their Cornell.edu email account thr
 The home page displays the Top Retrievers leaderboard, item-found posts that match the user's item request, and two buttons (Lost and Found) that the user can press to create either a lost item request or an item-found post.  
 
 ### Item Requests and Item Found status page and Item Match Page 
-<img src="https://github.com/user-attachments/assets/eae9b005-8513-4c37-b219-31f6de733589" alt="Settings Page" width="300">
+<img src="https://github.com/user-attachments/assets/41d711dd-1598-466f-9b13-18bf31fc6be3" alt="Another Screenshot" width="300">
 <img src="https://github.com/user-attachments/assets/452d3a82-cce2-41b2-8805-a384e0986551" alt="Profile Page" width="300">
 
 These screens show the page users are taken to when they want to make an item request post and the page that appears when the user taps on the item matches posts on the home page.  
