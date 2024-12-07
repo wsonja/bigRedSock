@@ -33,7 +33,21 @@ These screens show the page users are taken to when they want to make an item re
 - **Networking integration with a backend API:** Our app creates and fetches item requests and posts from the backend.    
 
 ### Backend
+- **At least 4 routes (1 must be GET, 1 must be POST, 1 must be DELETE):**
+- **At least 2 tables in database with a relationship between them:**
+- **API specification explaining each implemented route:**
+
 
 ### Design
+- **Low fidelity sketches of design:**
+- **Medium fidelity explorations of multiple flows in Figma:**
+- **High fidelity prototype in Figma:**
+- **UI design kit/design system in Figma:**
 
 ## The Team
+- Alanna Yang
+- Tina Chen
+- Satria Tjiaman
+- Sonja Wang 
+- Ethan Seiz
+- Allie Lin
