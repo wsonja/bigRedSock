@@ -9,6 +9,7 @@ With over 19,000 acres of land and buildings and **100+ lost and founds**, findi
 ## The App
 ![Simulator%20Screenshot%20-%20iPhone%2016%20Pro%20-%202024-12-06%20at%2000 16 21](https://github.com/user-attachments/assets/97ba7805-4625-4e87-ad42-0169e3089e80)
 
+<img src="[https://github.com/user-attachments/assets/9726bf9b-a03d-452c-9b74-a6c287d24f1e](https://github.com/user-attachments/assets/97ba7805-4625-4e87-ad42-0169e3089e80)" alt="Alt text" width="100" height="100">
 
 
 ## The Requirements
