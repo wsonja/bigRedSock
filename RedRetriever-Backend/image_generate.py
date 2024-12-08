@@ -15,8 +15,7 @@ def analyze_base64_image(base64_string):
     Returns:
         str: Description of what's in the image
     """
-    api_key = "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"
-
+    api_key = 
     try:
         if ',' in base64_string:
             base64_string = base64_string.split(',')[1]
