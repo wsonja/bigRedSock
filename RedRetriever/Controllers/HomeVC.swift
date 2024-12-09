@@ -9,16 +9,18 @@ import Foundation
 import UIKit
 
 class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDelegate {
-
+//
+//    
+//    func didUpdateProfile(with num: Int) {
+//        itemNumLabel.text = "No. of items: " + String(num)
+//    }
     
-    func didUpdateProfile(with num: Int) {
-        itemNumLabel.text = "No. of items: " + String(num)
-    }
     
 
     // MARK: - Properties (view)
     private var postCollectionView: UICollectionView!
     private var createPostCollectionView: UICollectionView!
+    private let refreshControl = UIRefreshControl()
     private var titleView: TitleView!
     private let leaderboardTableView = UITableView()
     
@@ -33,9 +35,141 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     private let leaderBoardLabel = UILabel()
     private let matchesLabel = UILabel()
     
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    
     // MARK: - Properties (data)
-    private var posts = Post.dummyData
-    private let users = User.dummyData
+    // private var requests = Post.dummyData
+    private var requests: [Request] = []
+    private var items: [Item] = []
+    private var users = User.dummyData
+    
+    @objc private func fetchAllPosts() {
+        self.requests = UserManager.shared.requests ?? []
+        DispatchQueue.main.async {
+            self.postCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+//        NetworkManager.shared.fetchAllPosts { [weak self] requests in
+//            guard let self = self else { return }
+//            print(requests.count)
+//            UserManager.shared.requests = requests
+//            self.requests = requests
+//            
+//        }
+    }
+    
+    @objc private func fetchAllItems() {
+        // for each request where userid = current user's id
+        // go through all the similar items
+        // and find in items where similar items contains
+        
+        // or go thru each item's requests array
+        // for each request array go thruech request and checkrequest user id == current
+        // if true then
+        print(UserManager.shared.requests ?? "huh")
+        self.items = []
+        var added = false
+        if var itemlist = UserManager.shared.items{
+            print("uh")
+            itemlist = itemlist.filter{$0.status == "unclaimed"}
+            for item in itemlist {
+                print(item.image)
+                for request in item.requests{
+                    print(request.id)
+                    if let requestlist = UserManager.shared.requests{
+                        print(requestlist[0].id)
+                        print("um")
+                        for ownrequest in requestlist{
+                            print(request.id)
+                            print(ownrequest.id)
+                            print("um")
+                            if request.id == ownrequest.id{
+                                items.append(item)
+                                added = true
+                                break
+                            }
+                            
+                        }
+                    }
+                    if added{break}
+                }
+            }
+        }
+        for item in items {
+            print("image omg")
+            print(item.description, item.image)
+        }
+            
+        
+        
+//    
+//        var unique: Set<Int> = []
+//        for request in requests{
+//            if request.user_id == UserManager.shared.userID {
+//                if let similar_items = request.similar_items{
+//                    for id in similar_items {
+//                        unique.insert(id)
+//                    }
+//                }
+//            }
+//        }
+//        self.items = UserManager.shared.items?.filter { unique.contains($0.id)} ?? []
+        
+        DispatchQueue.main.async {
+            self.postCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+//        showLoadingIndicator() // Show loading before starting the fetch
+//
+//        NetworkManager.shared.fetchAllItems { [weak self] items in
+//            guard let self = self else { return }
+//            self.hideLoadingIndicator()
+//            UserManager.shared.items = items
+//            self.items = items
+//            DispatchQueue.main.async {
+//                self.postCollectionView.reloadData()
+//                self.refreshControl.endRefreshing()
+//            }
+//        }
+    }
+    
+    @objc private func fetchAllUsers() {
+        self.users = UserManager.shared.users ?? []
+        DispatchQueue.main.async {
+            self.leaderboardTableView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+//        NetworkManager.shared.fetchAllUsers { [weak self] users in
+//            guard let self = self else { return }
+//            UserManager.shared.users = users
+//            self.users = users
+//            DispatchQueue.main.async {
+//                self.leaderboardTableView.reloadData()
+//                self.refreshControl.endRefreshing()
+//            }
+//        }
+    }
+    
+    private func showLoadingIndicator() {
+        DispatchQueue.main.async {
+                self.activityIndicator.center = self.view.center
+                self.activityIndicator.startAnimating()
+                self.activityIndicator.hidesWhenStopped = true
+                self.view.addSubview(self.activityIndicator)
+            }
+    }
+
+    @objc private func hideLoadingIndicator() {
+        DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            self.fetchAllPosts()
+            self.fetchAllItems()
+            self.fetchAllUsers()
+            
+                self.activityIndicator.removeFromSuperview()
+            }
+        
+    }
     
     
     
@@ -43,9 +177,25 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        print("hello")
         self.tabBarItem.title = "Home"
         view.backgroundColor = UIColor.white
+        
+        
+                
+                // Check if data is already fetched
+        if AppDelegate.shared.isDataFetched {
+            print("DATAFETCHED")
+            fetchAllItems()
+            fetchAllPosts()
+            fetchAllUsers()
+        } else {
+            print("FETCHING")
+            showLoadingIndicator()
+            NotificationCenter.default.addObserver(self, selector: #selector(hideLoadingIndicator), name: .dataFetched, object: nil)
+        }
+        
+        
         
         setupTitleView()
 //        setupcreateRequestButton()
@@ -58,13 +208,17 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
 //        setupRequestDetailButton()
 //        setupMatchedButton()
         
-        leaderboardTableView.reloadData()
-        
         setupMatchesLabel()
         setupPostCollectionView()
         
         
     
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchAllItems()
+        fetchAllPosts()
+        fetchAllUsers()
     }
     
     // MARK: - Set Up Views
@@ -98,7 +252,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
             leaderboardTableView.topAnchor.constraint(equalTo: leaderBoardLabel.bottomAnchor, constant: 10),
             leaderboardTableView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 32),
             leaderboardTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
-            leaderboardTableView.heightAnchor.constraint(equalToConstant: 100)
+            leaderboardTableView.heightAnchor.constraint(equalToConstant: CGFloat(users.count*30+80))
             
         ])
     }
@@ -190,7 +344,7 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
     }
         
     @objc func createRequestTapped() {
-        let CreateRequestVC = CreateRequestVC(name: "String", email: "String", phone: "12", date: Date(), location: "String", desc: "String")
+        let CreateRequestVC = CreateRequestVC()
         CreateRequestVC.delegate = self
         navigationController?.pushViewController(CreateRequestVC, animated: true)
     }
@@ -292,21 +446,13 @@ extension HomeVC: UICollectionViewDataSource {
     // MainCollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.createPostCollectionView {
-            return 1
-        }
-        return posts.count
-        // return 1
+        return items.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.createPostCollectionView{
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
-            return cell 
-        }
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCollectionViewCell.reuse, for: indexPath) as? PostCollectionViewCell else { return UICollectionViewCell() }
 
-        cell.configure(post: self.posts[indexPath.row])
+        cell.configure(item: self.items[indexPath.row])
         return cell
         
 //        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatePostCollectionViewCell.reuse, for: indexPath) as? CreatePostCollectionViewCell else { return UICollectionViewCell() }
@@ -331,7 +477,7 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             if collectionView == self.postCollectionView {
                 let viewItemVC = MatchedVC()
-                viewItemVC.configure(post: self.posts[indexPath.row])
+                viewItemVC.configure(item: self.items[indexPath.row])
                 navigationController?.pushViewController(viewItemVC, animated: true)
                 collectionView.reloadData()
             }
@@ -380,15 +526,15 @@ extension HomeVC: UITableViewDelegate{
 }
 
 protocol CreateRequestDelegate: AnyObject {
-    func didUpdateProfile(with num: Int)
+//    func didUpdateProfile(with num: Int)
 }
 
 protocol FoundDelegate: AnyObject {
-    func didUpdateProfile(with num: Int)
+//    func didUpdateProfile(with num: Int)
 }
 
 protocol MatchedDelegate: AnyObject {
-    func didUpdateProfile(with num: Int)
+//    func didUpdateProfile(with num: Int)
 }
 
 class TitleView: UIView {

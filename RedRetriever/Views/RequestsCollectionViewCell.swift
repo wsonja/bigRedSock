@@ -35,15 +35,30 @@ class RequestsCollectionViewCell: UICollectionViewCell {
     }
     
 //MARK: - configure
-    func configure(post: Post){
-        requestStatusLabel.text = post.status
+    func configure(request: Request){
+        requestStatusLabel.text = request.status
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateString = dateFormatter.string(from: post.date)
+        let date = Date(timeIntervalSince1970: TimeInterval(request.date))
+        
+        let dateString = dateFormatter.string(from: date)
         requestDateLabel.text = dateString
         
-        requestDescriptionLabel.text = post.description
+        requestDescriptionLabel.text = request.description
+    }
+    
+    func configure(item: Item){
+        requestStatusLabel.text = item.status
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = Date(timeIntervalSince1970: TimeInterval(item.date))
+        
+        let dateString = dateFormatter.string(from: date)
+        requestDateLabel.text = dateString
+        
+        requestDescriptionLabel.text = item.description
     }
     
 //MARK: - setup views

@@ -7,16 +7,22 @@
 
 import Foundation
 
-struct User {
-    let email: String
-    let name: String
-    let points: Int
-    let pfpURL: String
+struct UserResponse: Codable {
+    let users: [User]
+}
+
+struct User: Codable {
+    let id: Int              // The user's unique ID
+    let name: String         // The user's name
+    let email: String        // The user's email address
+    let points: Int          // The user's points (e.g., for a reward system)
+    let pfpURL: String?      // Optional profile picture URL
+    let requests: [Request]      // References to the user's request IDs
 }
 
 extension User {
     static let dummyData = [
-        User(email: "hi", name: "a", points: 10, pfpURL: ""),
-        User(email: "hg", name: "b", points: 20,  pfpURL: "")
+        User(id: 1, name: "a", email: "sw2374@cornell.edu", points: 10, pfpURL: "", requests: []),
+        User(id: 2, name: "b", email: "hi", points: 0, pfpURL: "", requests: []),
     ].sorted(by: { $0.points > $1.points })
 }

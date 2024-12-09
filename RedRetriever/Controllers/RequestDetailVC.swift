@@ -35,8 +35,8 @@ class RequestDetailVC: UIViewController {
     private var date = Date()
     private var location = String()
     private var desc = String()
-    let posts = Post.dummyData
-    var post: Post?
+    private var requests = UserManager.shared.requests
+    var request: Request?
     
     weak var delegate: FoundDelegate?
     
@@ -49,10 +49,10 @@ class RequestDetailVC: UIViewController {
         self.title = "Item Request Details"
         view.backgroundColor = UIColor.white
         setupUI()
-        if let post = post {
-            configure(with: post)
+        if let request = request {
+            configure(with: request)
         } else{
-            configure(with: posts[0])
+            configure(with: requests![0])
         }
         
         
@@ -146,7 +146,7 @@ class RequestDetailVC: UIViewController {
         rescindButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(rescindButton)
         NSLayoutConstraint.activate([
-            rescindButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -120),
+            rescindButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -180),
             rescindButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             rescindButton.widthAnchor.constraint(equalToConstant: 200),
             rescindButton.heightAnchor.constraint(equalToConstant: 50),
@@ -184,8 +184,8 @@ class RequestDetailVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(post: Post) {
-           self.post = post
+    init(request: Request) {
+           self.request = request
            super.init(nibName: nil, bundle: nil)
     }
         
@@ -195,44 +195,68 @@ class RequestDetailVC: UIViewController {
     
     @objc func rescindTapped() {
         // do some API stuff - delete??
-        let alert = UIAlertController(title: "Ok!", message: "Request successfully rescinded.", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+        
+        NetworkManager.shared.rescind(postID: request!.id) { [weak self] (success: Bool) in
+            guard let self = self else { return }
+            if success {
+                NetworkManager.shared.fetchAllUsers { [weak self] users in
+                    guard let self = self else { return }
+                    UserManager.shared.users = users
+                }
+                NetworkManager.shared.fetchAllPosts { [weak self] requests in
+                    guard let self = self else { return }
+                    UserManager.shared.requests = requests
+                }
+                NetworkManager.shared.fetchAllItems { [weak self] items in
+                    guard let self = self else { return }
+                    UserManager.shared.items = items
+                }
+                let alert = UIAlertController(title: "Ok!", message: "Request successfully rescinded.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Oops!", message: "Something went wrong. Please try again :(", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            }
         }
-        alert.addAction(okAction)
-        present(alert, animated: true, completion: nil)
-//        delegate?.didUpdateProfile(with: 1)
-//        navigationController?.popViewController(animated: true)
+
     }
     
-    func configure(with post: Post) {
+    func configure(with request: Request) {
         // Create an attributed string for the nameLabel
-        let nameText = "Name: \(post.title)"
+        let nameText = "Name: \(request.name)"
         let nameAttributedString = NSMutableAttributedString(string: nameText)
-        let nameValueRange = (nameText as NSString).range(of: post.title)  // Actual name part
+        let nameValueRange = (nameText as NSString).range(of: request.name)  // Actual name part
         nameAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: nameValueRange) // smaller font
         nameAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: nameValueRange)  //  dark gray
         nameLabel.attributedText = nameAttributedString
         
-        let emailText = "Email: \(post.email)"
+        let emailText = "Email: \(request.email)"
         let emailAttributedString = NSMutableAttributedString(string: emailText)
-        let emailValueRange = (emailText as NSString).range(of: post.email)  // Actual name part
+        let emailValueRange = (emailText as NSString).range(of: request.email)  // Actual name part
         emailAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: emailValueRange) // smaller font
         emailAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: emailValueRange)  //  dark gray
         emailLabel.attributedText = emailAttributedString
         
-        let phoneText = "Phone: \(post.phone)"
+        let phoneText = "Phone: \(request.phone)"
         let phoneAttributedString = NSMutableAttributedString(string: phoneText)
-        let phoneValueRange = (phoneText as NSString).range(of: post.phone)  // Actual name part
+        let phoneValueRange = (phoneText as NSString).range(of: request.phone)  // Actual name part
         phoneAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: phoneValueRange) // smaller font
         phoneAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: phoneValueRange)  //  dark gray
         phoneLabel.attributedText = phoneAttributedString
     
         
         // Create an attributed string for the descriptionLabel
-        let descriptionText = post.description
+        let descriptionText = request.description
         let descriptionAttributedString = NSMutableAttributedString(string: descriptionText)
-        let descriptionValueRange = (descriptionText as NSString).range(of: post.description)
+        let descriptionValueRange = (descriptionText as NSString).range(of: request.description)
         descriptionAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: descriptionValueRange)
         descriptionAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: descriptionValueRange)
         descriptionContent.attributedText = descriptionAttributedString
@@ -240,7 +264,9 @@ class RequestDetailVC: UIViewController {
         // Format the date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = dateFormatter.string(from: post.date)
+        let date = Date(timeIntervalSince1970: TimeInterval(request.date))
+        
+        let dateString = dateFormatter.string(from: date)
         let dateText = "Date: \(dateString)"
         let dateAttributedString = NSMutableAttributedString(string: dateText)
         let dateValueRange = (dateText as NSString).range(of: dateString)
@@ -249,9 +275,9 @@ class RequestDetailVC: UIViewController {
         dateLabel.attributedText = dateAttributedString
         
         // Create an attributed string for the locationLabel
-        let locationText = "Location: \(post.location)"
+        let locationText = "Location: \(request.location ?? "N/A")"
         let locationAttributedString = NSMutableAttributedString(string: locationText)
-        let locationValueRange = (locationText as NSString).range(of: post.location)
+        let locationValueRange = (locationText as NSString).range(of: request.location ?? "N/A")
         locationAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 19), range: locationValueRange)
         locationAttributedString.addAttribute(.foregroundColor, value: UIColor.darkGray, range: locationValueRange)
         locationLabel.attributedText = locationAttributedString

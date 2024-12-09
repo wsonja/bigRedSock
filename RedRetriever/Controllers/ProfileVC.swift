@@ -22,8 +22,7 @@ class ProfileVC: UIViewController {
     
     private let pastFindingsLabel = UILabel()
     private var requestsCollectionView: UICollectionView!
-    private var posts = Post.dummyData
-    
+    private var items = UserManager.shared.items
     private let logOutButton = UIButton()
     
     
@@ -35,12 +34,27 @@ class ProfileVC: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.prefersLargeTitles = false
         view.backgroundColor = UIColor.white
-
+        items = UserManager.shared.items
         self.tabBarItem.title = "Profile"
         setupUI()
         setuprequestsCollectionView()
         setupLogOutButton()
 
+    }
+    @objc private func fetchAllItems() {
+        self.items = UserManager.shared.items ?? []
+//        NetworkManager.shared.fetchAllPosts { [weak self] requests in
+//            guard let self = self else { return }
+//            print(requests.count)
+//            UserManager.shared.requests = requests
+//            self.requests = requests
+//            
+//        }
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchAllItems()
     }
     
     //MARK: set up views
@@ -144,7 +158,7 @@ class ProfileVC: UIViewController {
             requestsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             requestsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
             requestsCollectionView.topAnchor.constraint(equalTo: pastFindingsLabel.bottomAnchor, constant: 5),
-            requestsCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(posts.count*35))
+            requestsCollectionView.heightAnchor.constraint(equalToConstant: 200)
             ])
     }
     
@@ -202,9 +216,17 @@ extension ProfileVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.requestsCollectionView {
-            return posts.count
+            if var userItems = items{
+                userItems = userItems.filter { $0.finder_id == UserManager.shared.userID }
+                for user in userItems{
+                    print("ANOTHER ITEM")
+                    print(user.description,user.finder_id)
+                }
+                print("Count: \(userItems.count)")
+                return userItems.count
+            }
         }
-        return posts.count
+        return items!.count
         // return 1
     }
     
@@ -213,8 +235,11 @@ extension ProfileVC: UICollectionViewDataSource {
             print("hihihi")
         }
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else { return UICollectionViewCell() }
-
-        cell.configure(post: self.posts[indexPath.row])
+        if var userItems = items{
+            userItems = userItems.filter { $0.finder_id == UserManager.shared.userID }
+            cell.configure(item: userItems[indexPath.row])
+        }
+        
         return cell
         
 //        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: createRequestsCollectionViewCell.reuse, for: indexPath) as? createRequestsCollectionViewCell else { return UICollectionViewCell() }

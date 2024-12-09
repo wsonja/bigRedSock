@@ -33,10 +33,11 @@ class CreateRequestVC: UIViewController {
     
     
     // MARK: - Properties (data)
+    // do we even need this?
     private var name = String()
     private var email = String()
     private var phone = String()
-    private var date = Date()
+    private var date = Int()
     private var location = String()
     private var desc = String()
     
@@ -62,7 +63,7 @@ class CreateRequestVC: UIViewController {
     // MARK: - Set Up Views
     private func setupUI() {
         // Configure the labels
-        nameLabel.text = "Name: "
+        nameLabel.text = "Item name: "
         nameLabel.font = .systemFont(ofSize: 20, weight: .medium)
         nameLabel.textColor = UIColor.black
         
@@ -223,13 +224,7 @@ class CreateRequestVC: UIViewController {
             navigationController?.popViewController(animated: true)
         }
     
-    init(name: String, email: String, phone: String, date: Date, location: String, desc: String) {
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.date = date
-        self.location = location
-        self.desc = desc
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
         
@@ -239,14 +234,38 @@ class CreateRequestVC: UIViewController {
     
     @objc func submitTapped() {
         // update api add request
-        let alert = UIAlertController(title: "Thank you!", message: "Thanks for filling out the Item Request Form. We will work to find and match your item. ", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+        NetworkManager.shared.createPost(name: nameTextField.text!,date: dateField.date.timeIntervalSince1970, location: locationTextField.text!, description: descriptionTextField.text!, phone: phoneTextField.text!) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                NetworkManager.shared.fetchAllUsers { [weak self] users in
+                    guard let self = self else { return }
+                    UserManager.shared.users = users
+                }
+                NetworkManager.shared.fetchAllPosts { [weak self] requests in
+                    guard let self = self else { return }
+                    UserManager.shared.requests = requests
+                }
+                NetworkManager.shared.fetchAllItems { [weak self] items in
+                    guard let self = self else { return }
+                    UserManager.shared.items = items
+                }
+                let alert = UIAlertController(title: "Thank you!", message: "Thanks for filling out the Item Request Form. We will work to find and match your item. ", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Oops!", message: "Something went wrong. Please try again :(", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            }
         }
-        alert.addAction(okAction)
-        present(alert, animated: true, completion: nil)
-//        delegate?.didUpdateProfile(with: 1)
-//        navigationController?.popViewController(animated: true)
+        
+       
     }
     
     

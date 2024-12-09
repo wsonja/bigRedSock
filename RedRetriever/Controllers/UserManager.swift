@@ -15,8 +15,13 @@ class UserManager {
     var firstName: String?
     var lastName: String?
     var profilePicURL: URL?
+    var userID: Int?
     
     var points: Int?
+    
+    var users: [User]?
+    var requests: [Request]?
+    var items: [Item]?
 
     private init() {} // Private initializer to prevent creating new instances
 }

@@ -20,10 +20,31 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
     private var headerView: UIView!
     private var foundHeaderView: UIView!
     private let itemNumLabel = UILabel()
+    private var refreshControl = UIRefreshControl()
     
     // MARK: - Properties (data)
-    private var posts = Post.dummyData
+    private var requests: [Request] = []
+    private var claimed: [Request] = []
     
+    @objc private func fetchAllPosts() {
+        let allrequests = UserManager.shared.requests ?? []
+        for i in allrequests{
+            print("ITEMTEST")
+            print(i.id, i.name, i.description, i.user_id, i.status)
+        }
+        print("user",UserManager.shared.userID)
+        self.requests = allrequests.filter { $0.user_id == UserManager.shared.userID && $0.status == "unclaimed"}
+        self.claimed = allrequests.filter { $0.user_id == UserManager.shared.userID && $0.status != "unclaimed" }
+        
+        DispatchQueue.main.async{
+            self.requestsCollectionView.reloadData()
+            print("claimed count: \(self.claimed.count)")
+            self.foundCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+    }
+    
+ 
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,13 +52,20 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         navigationController?.navigationBar.prefersLargeTitles = false
         view.backgroundColor = UIColor.white
 
-        
+
         self.tabBarItem.title = "Requests"
+        fetchAllPosts()
         setupRequestHeadings()
         setuprequestsCollectionView()
         setupFoundHeadings()
         setupFoundCollectionView()
 
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchAllPosts()
+        print("sungjin")
+        print(UserManager.shared.userID)
     }
     
     //MARK: set up views
@@ -48,7 +76,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         headerView = UIView()
         
         let headLabel = UILabel()
-        headLabel.text = "Requests"
+        headLabel.text = "My Requests"
         headLabel.textAlignment = .center
         headLabel.font = UIFont.boldSystemFont(ofSize: 20)
         
@@ -141,13 +169,14 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         
         // Enable Auto Layout
         requestsCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+        print("HIHIHI")
+        print(UserManager.shared.requests![0])
         // Set constraints to position the collection view below the header view
         NSLayoutConstraint.activate([
             requestsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             requestsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
             requestsCollectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
-            requestsCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(posts.count*35))
+            requestsCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1 / 4)
             ])
     }
     
@@ -157,7 +186,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         foundHeaderView = UIView()
         
         let headLabel = UILabel()
-        headLabel.text = "Items Found"
+        headLabel.text = "Items Claimed"
         headLabel.textAlignment = .center
         headLabel.font = UIFont.boldSystemFont(ofSize: 20)
         
@@ -257,7 +286,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
             foundCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(padding)),
             foundCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-padding)),
             foundCollectionView.topAnchor.constraint(equalTo: foundHeaderView.bottomAnchor),
-            foundCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(posts.count*35))
+            foundCollectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1 / 4)
             ])
     }
 
@@ -277,49 +306,32 @@ extension RequestsVC: UICollectionViewDataSource {
     // MainCollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        let filteredPosts: [Post]
+        print("requests or found")
+
         if collectionView == self.requestsCollectionView {
-            filteredPosts = posts.filter { $0.status != "found" }
-            print("Count: \(filteredPosts.count)")
-            return filteredPosts.count
+            print(requests.count, "REQCOUNT")
+            return requests.count
         } else if collectionView == self.foundCollectionView {
-            filteredPosts = posts.filter { $0.status == "found" }
-            print("Count: \(filteredPosts.count)")
-            return filteredPosts.count
-            
+            print(claimed.count, "CLAIMCOUNT")
+            return claimed.count
         }
-        print("Count: \(posts.count)")
-        return posts.count
-        // return 1
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         print("Row: \(indexPath.row)")
-        let filteredPosts: [Post]
+
+        // Dequeue and configure the cell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        if collectionView == self.requestsCollectionView {
+            cell.configure(request: requests[indexPath.row])
+        } else if collectionView == self.foundCollectionView {
+            cell.configure(request: claimed[indexPath.row])
+        }
             
-            if collectionView == self.requestsCollectionView {
-                // Filter out posts with status "Found"
-                filteredPosts = posts.filter { $0.status != "found" }
-            } else if collectionView == self.foundCollectionView {
-                // Filter only posts with status "Found"
-                filteredPosts = posts.filter { $0.status == "found" }
-            } else {
-                // Return empty cell if it's an unknown collection view
-                return UICollectionViewCell()
-            }
-        
-        let post = filteredPosts[indexPath.row]
-            
-            // Dequeue and configure the cell
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsCollectionViewCell.reuse, for: indexPath) as? RequestsCollectionViewCell else {
-                return UICollectionViewCell()
-            }
-            
-            // Configure the cell with the filtered post
-            cell.configure(post: post)
-            
-            return cell
+        return cell
         
     }
 }
@@ -340,34 +352,15 @@ extension RequestsVC: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            let selectedPost = posts[indexPath.row]
+        if collectionView == self.requestsCollectionView {
+            let selectedPost = requests[indexPath.row]
+            let requestDetailVC = RequestDetailVC()
+            requestDetailVC.request = selectedPost // Pass the post object or index if needed
+            navigationController?.pushViewController(requestDetailVC, animated: true)
             
-            // Check the status of the selected post
-            if selectedPost.status == "matched" {
-                // If the status is "Matched", navigate to MatchedVC
-                let matchedVC = MatchedVC()
-                matchedVC.post = selectedPost // Pass the post object or index if needed
-                navigationController?.pushViewController(matchedVC, animated: true)
-            } else if selectedPost.status == "pending" {
-                // If the status is "Found", navigate to RequestDetailsVC
-                let requestDetailVC = RequestDetailVC()
-                requestDetailVC.post = selectedPost // Pass the post object or index if needed
-                navigationController?.pushViewController(requestDetailVC, animated: true)
-            } else if selectedPost.status == "not found" {
-                let alertController = UIAlertController(title: "Sorry :(", message: "Item still not found.", preferredStyle: .alert)
-                    
-                // Add an "OK" action
-                let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-                    // Optional: Code to execute after the alert is dismissed
-                    print("User dismissed the alert")
-                }
-                alertController.addAction(okAction)
-                
-                // Present the alert
-                self.present(alertController, animated: true, completion: nil)
-
-            }
         }
+            
+    }
     
 
 }

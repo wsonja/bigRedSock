@@ -63,7 +63,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
     // MARK: - Set Up Views
     private func setupUI() {
         // Configure the labels
-        nameLabel.text = "Name: "
+        nameLabel.text = "Item name: "
         nameLabel.font = .systemFont(ofSize: 20, weight: .medium)
         nameLabel.textColor = UIColor.black
        
@@ -255,15 +255,42 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
     
     @objc func submitTapped() {
         // some api stuff to +5points -update database to add this found thing
-        let alert = UIAlertController(title: "+5 points!", message: "Good work retriever!", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+        let imageData:NSData = imageView.image!.pngData()! as NSData
+        let strBase64 = imageData.base64EncodedString(options: .lineLength64Characters)
+//        print("IMAGE")
+//        print(strBase64)
+        NetworkManager.shared.createFound(name: nameTextField.text!, date: dateField.date.timeIntervalSince1970, location: locationTextField.text!, description: descriptionTextField.text!, image: strBase64, phone: "123") { [weak self] (success: Bool) in
+            guard let self = self else { return }
+            if success {
+                UserManager.shared.points! += 5
+                NetworkManager.shared.fetchAllUsers { [weak self] users in
+                    guard let self = self else { return }
+                    UserManager.shared.users = users
+                }
+                NetworkManager.shared.fetchAllPosts { [weak self] requests in
+                    guard let self = self else { return }
+                    UserManager.shared.requests = requests
+                }
+                NetworkManager.shared.fetchAllItems { [weak self] items in
+                    guard let self = self else { return }
+                    UserManager.shared.items = items
+                }
+                let alert = UIAlertController(title: "+5 points!", message: "Good work retriever!", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Oops!", message: "Something went wrong. Please try again :(", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                present(alert, animated: true, completion: nil)
+            }
         }
-        alert.addAction(okAction)
-        present(alert, animated: true, completion: nil)
-        
-//        delegate?.didUpdateProfile(with: 1)
-//        navigationController?.popViewController(animated: true)
+
     }
     
     @objc func selectImage() {
@@ -283,12 +310,12 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
                 imageView.image = editedImage
                 uploadLabel.text = "Upload success!"
                 uploadButton.isHidden = true
-                uploadImageToServer(image: editedImage)
+//                uploadImageToServer(image: editedImage)
             } else if let originalImage = info[.originalImage] as? UIImage {
                 imageView.image = originalImage
                 uploadLabel.text = "Upload success!"
                 uploadButton.isHidden = true
-                uploadImageToServer(image: originalImage)
+//                uploadImageToServer(image: originalImage)
             }
         }
 
@@ -303,7 +330,7 @@ class FoundVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCo
             guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
             
             // Create a URL request (replace with your server URL)
-            let url = URL(string: "https://your-server.com/upload")!
+            let url = URL(string: "http://your-server.com/upload")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             

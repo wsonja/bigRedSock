@@ -14,9 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    var isDataFetched = false
+
+    static var shared: AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
         // Initialize Google Sign-In
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
             if let error = error {
@@ -33,9 +39,82 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UserManager.shared.firstName = givenName
                 UserManager.shared.lastName = familyName
                 UserManager.shared.profilePicURL = profilePicUrl
+                
+                let dispatchGroup = DispatchGroup()
+                
+                DispatchQueue.global().async {
+                    // Start the first API call
+                    dispatchGroup.enter()
+                    NetworkManager.shared.fetchAllPosts { [weak self] requests in
+                        defer { dispatchGroup.leave() }
+                        guard let self = self else { return }
+                        UserManager.shared.requests = requests
+                        if let requests = UserManager.shared.requests {
+                            for request in requests {
+                                print(request.location, request.description, request.name, request.status)
+                            }
+                        } else {
+                            print("No requests to process")
+                        }
+                        print(UserManager.shared.requests?.count ?? 0)
+                    }
+                    
+                    // Start the second API call
+                    dispatchGroup.enter()
+                    NetworkManager.shared.fetchAllItems { [weak self] items in
+                        defer { dispatchGroup.leave() }
+                        guard let self = self else { return }
+                        UserManager.shared.items = items
+                        if let items = UserManager.shared.items {
+                            for item in items {
+                                print(item.location, item.description, item.title, item.status, item.image)
+                            }
+                        } else {
+                            print("No items to process")
+                        }
+                        print(UserManager.shared.items?.count ?? 0)
+                    }
+                    
+                    // Start the third API call
+                    dispatchGroup.enter()
+                    NetworkManager.shared.fetchAllUsers { [weak self] users in
+                        defer { dispatchGroup.leave() }
+                        guard let self = self else { return }
+                        UserManager.shared.users = users
+                        if let users = UserManager.shared.users {
+                            for user in users {
+                                print(user.name, user.email, user.points)
+                            }
+                        } else {
+                            print("No user to process")
+                        }
+                        print(UserManager.shared.users?.count ?? 0)
+                        for user in users {
+                            if UserManager.shared.email == user.email {
+                                UserManager.shared.userID = user.id
+                                UserManager.shared.points = user.points
+//                                UserManager.shared.requests = user.requests
+                                print("user found!!")
+                            }
+                        }
+                    }
+                    
+                    // Notify once all API calls are completed
+                    dispatchGroup.notify(queue: .main) { [weak self] in
+                        guard let self = self else { return }
+                        print(UserManager.shared.requests?.count)
+                        print("All API calls completed")
+                        self.isDataFetched = true
+                        
+                        // Post a notification
+                        NotificationCenter.default.post(name: .dataFetched, object: nil)
+                    }
+                }
             }
+            
         }
         return true
+    }
     }
     
     func application(
@@ -60,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
-}
+
 
 
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
@@ -128,4 +207,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
 //        self.tabBar.barTintColor = UIColor.white
 //        self.tabBar.tintColor = UIColor.systemBlue
 //    }
+}
+
+extension Notification.Name {
+    static let dataFetched = Notification.Name("dataFetched")
 }

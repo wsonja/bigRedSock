@@ -98,6 +98,36 @@ class LoginVC: UIViewController {
           UserManager.shared.firstName = givenName
           UserManager.shared.lastName = familyName
           UserManager.shared.profilePicURL = profilePicUrl
+          NetworkManager.shared.fetchAllPosts { [weak self] requests in
+              guard let self = self else { return }
+              // Assign the fetched requests to UserManager.shared.requests
+              UserManager.shared.requests = requests
+              print(UserManager.shared.requests![0].description)
+              print(UserManager.shared.requests!.count)
+          }
+          NetworkManager.shared.fetchAllItems { [weak self] items in
+              guard let self = self else { return }
+              // Assign the fetched requests to UserManager.shared.requests
+              UserManager.shared.items = items
+              print(UserManager.shared.items![0].description)
+              print(UserManager.shared.items!.count)
+          }
+          NetworkManager.shared.fetchAllUsers { [weak self] users in
+              guard let self = self else { return }
+              // Assign the fetched requests to UserManager.shared.requests
+              UserManager.shared.users = users
+              print(UserManager.shared.users![0].name)
+              print(UserManager.shared.users!.count)
+              for user in users {
+                  if (UserManager.shared.email == user.email){
+                      UserManager.shared.userID = user.id
+                      UserManager.shared.points = user.points
+                      print("user found!!")
+                  }
+                  
+              }
+          }
+         
       }
         UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
         UserDefaults.standard.synchronize()
