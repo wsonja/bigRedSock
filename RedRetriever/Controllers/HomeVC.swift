@@ -66,6 +66,12 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
         // or go thru each item's requests array
         // for each request array go thruech request and checkrequest user id == current
         // if true then
+        
+        
+        // go thru each item's request array - contains minirequests
+        // go thru each minirequest and look up that request in usermanager.shared.requests
+        // if that request in usermanager.shared.request userid is equal to current -add this item added = true
+        
         print(UserManager.shared.requests ?? "huh")
         self.items = []
         var added = false
@@ -73,17 +79,18 @@ class HomeVC: UIViewController, CreateRequestDelegate, FoundDelegate, MatchedDel
             print("uh")
             itemlist = itemlist.filter{$0.status == "unclaimed"}
             for item in itemlist {
-                print(item.image)
-                for request in item.requests{
-                    print(request.id)
-                    if let requestlist = UserManager.shared.requests{
-                        print(requestlist[0].id)
+                added = false
+                print("THIS ITEM", item.id, item.title, item.description, item.requests.count)
+                for miniRequest in item.requests{
+                    
+                    print("THIS REQ", miniRequest.id)
+                    if let allRequests = UserManager.shared.requests{
+                        
                         print("um")
-                        for ownrequest in requestlist{
-                            print(request.id)
-                            print(ownrequest.id)
-                            print("um")
-                            if request.id == ownrequest.id{
+                        for req in allRequests{
+                            print(req.id, req.user_id)
+                            if (req.user_id == UserManager.shared.userID && req.id == miniRequest.id){
+                                print("YES")
                                 items.append(item)
                                 added = true
                                 break
@@ -476,10 +483,10 @@ extension HomeVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             if collectionView == self.postCollectionView {
+                print(self.items[indexPath.row].id, self.items[indexPath.row].title, self.items[indexPath.row].description )
                 let viewItemVC = MatchedVC()
                 viewItemVC.configure(item: self.items[indexPath.row])
                 navigationController?.pushViewController(viewItemVC, animated: true)
-                collectionView.reloadData()
             }
         }
     

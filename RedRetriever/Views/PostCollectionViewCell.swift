@@ -15,13 +15,15 @@ func convertBase64ToUIImage(base64String: String) -> UIImage? {
         print("Invalid Base64 string")
         return nil
     }
+    
 
     // Decode the Base64 string into Data
     guard let imageData = Data(base64Encoded: base64DataString, options: .ignoreUnknownCharacters) else {
         print("Failed to decode Base64 string into Data")
         return nil
     }
-
+    print("Image data size: \(imageData.count) bytes")
+    
     // Create a UIImage from the Data
     guard let image = UIImage(data: imageData) else {
         print("Failed to create UIImage from Data")
@@ -81,6 +83,7 @@ class PostCollectionViewCell: UICollectionViewCell {
             // test the corner radius
             // postImageView.layer.cornerRadius = 15.0
             postImageView.clipsToBounds = true
+        
 
             //add to subview
             contentView.addSubview(postImageView)

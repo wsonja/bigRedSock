@@ -200,23 +200,22 @@ class NetworkManager {
                 }
         }
         
-        func unsuccessMatch(postID: String, completion: @escaping (Bool) -> Void) {
-            let url = "http://chatdev-wuzwgwv35a-ue.a.run.app/api/posts/like/"
-            
-            let parameters: Parameters = [
-                "post_id": postID,
-                "status": "pending"
+        func unsuccessMatch(postID: Int, completion: @escaping (Bool) -> Void) {
+            print("Postid: ", postID)
+            let url = "http://35.221.24.216/api/items/\(postID)"
+            print(url)
+            var parameters: Parameters = [
+                "status": "not mine"
             ]
-            
             AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
                 .validate()
                 .response { response in
                     switch response.result {
                     case .success:
-                        print("Item is now pending")
+                        print("Item unmatched successfully")
                         completion(true)
                     case .failure(let error):
-                        print("Failed to repost pending item.", error)
+                        print("Failed to unmatch item:", error)
                         completion(false)
                     }
                 }

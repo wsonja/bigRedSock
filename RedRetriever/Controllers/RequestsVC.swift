@@ -34,7 +34,7 @@ class RequestsVC: UIViewController, CreateRequestDelegate, FoundDelegate {
         }
         print("user",UserManager.shared.userID)
         self.requests = allrequests.filter { $0.user_id == UserManager.shared.userID && $0.status == "unclaimed"}
-        self.claimed = allrequests.filter { $0.user_id == UserManager.shared.userID && $0.status != "unclaimed" }
+        self.claimed = allrequests.filter { $0.user_id == UserManager.shared.userID && $0.status != "unclaimed" && $0.status != "not mine"}
         
         DispatchQueue.main.async{
             self.requestsCollectionView.reloadData()
