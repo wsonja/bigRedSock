@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  demo:
+    image: satriat/hackathon11
+    ports:
+     - "80:8000"
