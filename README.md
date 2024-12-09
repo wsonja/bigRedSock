@@ -41,7 +41,11 @@ Additionally, we included a powerful search feature that allows users to find si
 
 ### Design
 **Design in Figma:** https://www.figma.com/design/ESTQTcXJHDG98oegfAmgyE/Hack-Challenge?node-id=0-1&t=0ei71U5QRHJbYZeo-1
+
 We designed multiple pages, drawing low-fidelity and medium-fidelity explorations. We also created a UI kit for our app. More specifics can be found on our figma. 
+
+<img width="500" alt="Screen Shot 2024-12-08 at 7 43 27 PM" src="https://github.com/user-attachments/assets/0f27536d-456d-40da-bfa8-ff99597af20a">
+
 
 ## The Team
 - Alanna Yang
